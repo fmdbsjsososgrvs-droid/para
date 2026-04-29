@@ -648,7 +648,16 @@
       renderEvList();
       modalBg.classList.add('open');
       modalBg.setAttribute('aria-hidden', 'false');
-      setTimeout(() => fContent.focus(), 100);
+
+      // 모달 내부 스크롤을 최상단으로
+      const modalEl = modalBg.querySelector('.modal');
+      if (modalEl) modalEl.scrollTop = 0;
+
+      // 포커스는 주되 스크롤은 옮기지 않음 (textarea가 화면 밖이어도 스크롤 그대로 유지)
+      setTimeout(() => {
+        try { fContent.focus({ preventScroll: true }); }
+        catch (e) { fContent.focus(); }
+      }, 100);
     }
     function closeModal() {
       modalBg.classList.remove('open');
