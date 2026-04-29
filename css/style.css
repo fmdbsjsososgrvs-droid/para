@@ -76,7 +76,7 @@ img { max-width: 100%; }
   display: flex;
   align-items: center;
   gap: 12px;
-  font-family: 'Gaegu', cursive;
+  font-family: 'Gaegu', 'Apple SD Gothic Neo', '돋움', sans-serif;
   font-size: 26px;
   font-weight: 700;
   color: var(--accent-deep, #d96a8a);
@@ -115,7 +115,7 @@ img { max-width: 100%; }
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.55);
   border: 2px solid transparent;
-  font-family: 'Gaegu', cursive;
+  font-family: 'Gaegu', 'Apple SD Gothic Neo', '돋움', sans-serif;
   font-size: 18px;
   font-weight: 700;
   color: #8a6f7a;
@@ -148,7 +148,7 @@ img { max-width: 100%; }
 }
 
 .page-title {
-  font-family: 'Gaegu', cursive;
+  font-family: 'Gaegu', 'Apple SD Gothic Neo', '돋움', sans-serif;
   font-size: 34px;
   font-weight: 700;
   color: var(--accent-deep);
@@ -181,7 +181,7 @@ img { max-width: 100%; }
   opacity: 0.85;
 }
 .empty-state .msg {
-  font-family: 'Gaegu', cursive;
+  font-family: 'Gaegu', 'Apple SD Gothic Neo', '돋움', sans-serif;
   font-size: 22px;
   color: var(--accent-deep);
 }
