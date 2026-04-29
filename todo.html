@@ -11,7 +11,7 @@
     .add-row {
       display: flex;
       gap: 10px;
-      margin-bottom: 22px;
+      margin-bottom: 18px;
     }
     .add-row input {
       flex: 1;
@@ -40,9 +40,29 @@
       font-weight: 700;
       cursor: pointer;
       transition: all .15s;
+      white-space: nowrap;
     }
     .add-row button:hover { background: var(--accent-deep); }
+    .add-row button:disabled { opacity: 0.5; cursor: not-allowed; }
 
+    /* 통계 */
+    .todo-stats {
+      display: flex;
+      gap: 18px;
+      margin-bottom: 16px;
+      padding: 10px 18px;
+      background: rgba(255, 255, 255, 0.55);
+      border-radius: 12px;
+      font-size: 14px;
+      color: #6b4a55;
+    }
+    .todo-stats strong {
+      color: var(--accent-deep);
+      font-weight: 700;
+      margin: 0 4px;
+    }
+
+    /* 리스트 */
     .todo-list {
       list-style: none;
       padding: 0;
@@ -54,7 +74,7 @@
       align-items: center;
       gap: 12px;
       padding: 12px 16px;
-      background: rgba(255,255,255,0.55);
+      background: rgba(255, 255, 255, 0.6);
       border: 2px solid transparent;
       border-radius: 16px;
       margin-bottom: 8px;
@@ -64,17 +84,66 @@
       border-color: var(--accent-soft);
       background: #fff;
     }
+    .todo-list li.done { opacity: 0.55; }
+    .todo-list li.done .text {
+      text-decoration: line-through;
+      color: #8a6f7a;
+    }
+
     .todo-list .check {
-      width: 22px;
-      height: 22px;
+      width: 26px;
+      height: 26px;
       border: 2px solid var(--accent);
       border-radius: 50%;
       flex-shrink: 0;
+      background: transparent;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: 700;
+      color: transparent;
+      transition: all .15s;
+      padding: 0;
     }
+    .todo-list .check:hover { background: var(--accent-soft); }
+    .todo-list .check.done {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #fff;
+    }
+
     .todo-list .text {
       flex: 1;
-      color: #5a4651;
-      font-size: 15px;
+      color: #1a1a1a;
+      font-size: 16px;
+      font-weight: 500;
+      word-break: break-word;
+      line-height: 1.4;
+    }
+
+    .todo-list .del-btn {
+      background: transparent;
+      border: none;
+      color: #a48b96;
+      cursor: pointer;
+      font-size: 16px;
+      padding: 6px 10px;
+      border-radius: 8px;
+      transition: all .15s;
+      opacity: 0;
+    }
+    .todo-list li:hover .del-btn,
+    .todo-list li.done .del-btn { opacity: 1; }
+    .todo-list .del-btn:hover {
+      color: #c97070;
+      background: #fbe5e5;
+    }
+
+    /* 모바일에서는 삭제 버튼 항상 보이게 */
+    @media (max-width: 640px) {
+      .todo-list .del-btn { opacity: 1; }
     }
   </style>
 </head>
@@ -100,23 +169,170 @@
       <h1 class="page-title">✓ 해야 할일</h1>
       <p class="page-subtitle">함께 챙길 가족의 일들이에요.</p>
 
-      <div class="add-row">
-        <input type="text" placeholder="할 일을 적어주세요" disabled />
-        <button type="button" disabled>추가</button>
+      <form id="todoForm" class="add-row" autocomplete="off">
+        <input type="text" id="todoInput" placeholder="할 일을 적어주세요" maxlength="200" required />
+        <button type="submit" id="todoAddBtn">추가</button>
+      </form>
+
+      <div class="todo-stats" id="todoStats" hidden>
+        <span>남은 일<strong id="leftCount">0</strong>개</span>
+        <span>완료<strong id="doneCount">0</strong>개</span>
       </div>
 
-      <ul class="todo-list" id="todoList">
-        <!-- 비어있음: empty state로 대체 -->
-      </ul>
+      <ul class="todo-list" id="todoList"></ul>
 
-      <div class="empty-state">
+      <div class="empty-state" id="emptyState">
         <img src="11/22.png" alt="" />
         <div class="msg">아직 할 일이 없어요</div>
-        <div class="sub">곧 가족 할 일을 추가할 수 있게 될 거예요.</div>
+        <div class="sub">위 입력칸에 할 일을 적어보세요.</div>
       </div>
     </section>
   </main>
 
   <footer class="app-footer">made with ♥ for 다솜이네 가족</footer>
+
+  <script type="module">
+  /* ───────────────────────────────────────────
+   * 다솜이네 — 해야 할일 (Firestore 연동)
+   * dasom_todos 컬렉션에 실시간 동기화됩니다.
+   * ─────────────────────────────────────────── */
+  import {
+    db, COLS,
+    collection, doc,
+    addDoc, updateDoc, deleteDoc,
+    onSnapshot, serverTimestamp,
+    ensureSignedIn,
+  } from './js/firebase-init.js';
+
+  // 인증 보장
+  try {
+    await ensureSignedIn();
+  } catch (e) {
+    console.error('Firebase 인증 실패', e);
+    alert('인증이 만료됐어요. 다시 로그인해 주세요.');
+    sessionStorage.removeItem('dasom_family_auth');
+    location.replace('index.html');
+    throw e;
+  }
+
+  (function () {
+    'use strict';
+
+    const todosRef = collection(db, COLS.todos);
+
+    // ─── DOM ───
+    const list = document.getElementById('todoList');
+    const empty = document.getElementById('emptyState');
+    const stats = document.getElementById('todoStats');
+    const leftCountEl = document.getElementById('leftCount');
+    const doneCountEl = document.getElementById('doneCount');
+    const form = document.getElementById('todoForm');
+    const input = document.getElementById('todoInput');
+    const addBtn = document.getElementById('todoAddBtn');
+
+    // ─── 캐시 ───
+    let cache = []; // [{id, text, done, createdAt}]
+
+    function escapeHtml(s) {
+      return String(s).replace(/[&<>"']/g, c => ({
+        '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;'
+      }[c]));
+    }
+
+    function tsSeconds(t) { return (t && t.seconds) || 0; }
+
+    // ─── 렌더 ───
+    function render() {
+      if (cache.length === 0) {
+        list.innerHTML = '';
+        empty.hidden = false;
+        stats.hidden = true;
+        return;
+      }
+      empty.hidden = true;
+      stats.hidden = false;
+
+      // 미완료(오래된 순) → 완료(최근 순)
+      const undone = cache.filter(t => !t.done).sort((a,b) => tsSeconds(a.createdAt) - tsSeconds(b.createdAt));
+      const done   = cache.filter(t =>  t.done).sort((a,b) => tsSeconds(b.createdAt) - tsSeconds(a.createdAt));
+
+      leftCountEl.textContent = undone.length;
+      doneCountEl.textContent = done.length;
+
+      list.innerHTML = '';
+      [...undone, ...done].forEach(t => {
+        const li = document.createElement('li');
+        if (t.done) li.classList.add('done');
+        li.innerHTML = `
+          <button type="button" class="check${t.done ? ' done' : ''}" title="${t.done ? '완료 취소' : '완료'}" aria-label="완료 토글">${t.done ? '✓' : ''}</button>
+          <span class="text">${escapeHtml(t.text || '')}</span>
+          <button type="button" class="del-btn" title="삭제" aria-label="삭제">✕</button>
+        `;
+        li.querySelector('.check').onclick = () => toggleDone(t);
+        li.querySelector('.del-btn').onclick = () => removeTodo(t);
+        list.appendChild(li);
+      });
+    }
+
+    // ─── 액션 ───
+    async function addTodo(text) {
+      addBtn.disabled = true;
+      try {
+        await addDoc(todosRef, {
+          text,
+          done: false,
+          createdAt: serverTimestamp(),
+        });
+      } catch (err) {
+        console.error(err);
+        alert('추가에 실패했어요: ' + err.message);
+      } finally {
+        addBtn.disabled = false;
+      }
+    }
+
+    async function toggleDone(t) {
+      try {
+        await updateDoc(doc(db, COLS.todos, t.id), {
+          done: !t.done,
+          doneAt: !t.done ? serverTimestamp() : null,
+        });
+      } catch (err) {
+        console.error(err);
+        alert('변경에 실패했어요: ' + err.message);
+      }
+    }
+
+    async function removeTodo(t) {
+      try {
+        await deleteDoc(doc(db, COLS.todos, t.id));
+      } catch (err) {
+        console.error(err);
+        alert('삭제에 실패했어요: ' + err.message);
+      }
+    }
+
+    // ─── 실시간 구독 ───
+    onSnapshot(todosRef, (snap) => {
+      cache = [];
+      snap.forEach(d => cache.push({ id: d.id, ...d.data() }));
+      render();
+    }, (err) => {
+      console.error('[Firestore] todos onSnapshot error', err);
+    });
+
+    // ─── 폼 ───
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const text = input.value.trim();
+      if (!text) return;
+      input.value = '';
+      input.focus();
+      await addTodo(text);
+    });
+
+    window.DasomTodo = { get cache() { return cache.slice(); } };
+  })();
+  </script>
 </body>
 </html>
