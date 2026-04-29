@@ -8,55 +8,275 @@
   <link rel="stylesheet" href="css/style.css" />
   <script src="js/guard.js"></script>
   <style>
-    .memo-toolbar {
+    /* ─── 작성자 색상 ─── */
+    :root {
+      --au-mom:    #f7a8a8;
+      --au-mom-s:  #ffe0e0;
+      --au-dad:    #a8c8ec;
+      --au-dad-s:  #dfeefb;
+      --au-da:     #f7d976;
+      --au-da-s:   #fff5b1;
+    }
+
+    /* ─── 새 메모 작성 폼 ─── */
+    .memo-form {
+      background: rgba(255, 255, 255, 0.7);
+      border: 2px solid var(--accent-soft);
+      border-radius: 20px;
+      padding: 22px 24px;
+      margin-bottom: 30px;
+    }
+    .form-section + .form-section { margin-top: 14px; }
+    .form-label {
+      display: block;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--accent-deep);
+      margin-bottom: 8px;
+    }
+
+    /* 작성자 버튼 */
+    .author-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .author-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 20px;
+      border: 2px solid var(--accent-soft);
+      background: var(--paper);
+      border-radius: 999px;
+      cursor: pointer;
+      font-family: 'Gaegu', cursive;
+      font-size: 18px;
+      font-weight: 700;
+      color: #5a4651;
+      transition: all .15s;
+    }
+    .author-btn:hover {
+      background: #fff;
+      transform: translateY(-2px);
+    }
+    .author-btn .au-dot {
+      width: 14px; height: 14px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+    .author-btn[data-author="mom"]   .au-dot { background: var(--au-mom); }
+    .author-btn[data-author="dad"]   .au-dot { background: var(--au-dad); }
+    .author-btn[data-author="dasom"] .au-dot { background: var(--au-da); }
+    .author-btn.selected[data-author="mom"]   { background: var(--au-mom-s); border-color: var(--au-mom); }
+    .author-btn.selected[data-author="dad"]   { background: var(--au-dad-s); border-color: var(--au-dad); }
+    .author-btn.selected[data-author="dasom"] { background: var(--au-da-s);  border-color: var(--au-da);  }
+
+    /* 이미지 피커 */
+    .image-picker {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(64px, 1fr));
+      gap: 6px;
+      padding: 12px;
+      background: rgba(255, 255, 255, 0.55);
+      border: 2px dashed var(--accent-soft);
+      border-radius: 14px;
+      max-height: 200px;
+      overflow-y: auto;
+    }
+    .image-picker button {
+      border: 2px solid transparent;
+      background: #fff;
+      border-radius: 8px;
+      padding: 4px;
+      cursor: pointer;
+      transition: all .15s;
+      aspect-ratio: 1;
+    }
+    .image-picker button:hover {
+      border-color: var(--accent);
+      transform: scale(1.05);
+    }
+    .image-picker img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      pointer-events: none; /* 부모 button이 이벤트 받게 */
+    }
+
+    /* 본문 에디터 */
+    .memo-editor {
+      min-height: 130px;
+      padding: 16px 18px;
+      border: 2px solid var(--accent-soft);
+      border-radius: 14px;
+      background: var(--paper);
+      font-family: inherit;
+      font-size: 15px;
+      color: #2a2125;
+      outline: none;
+      line-height: 1.7;
+      transition: all .15s;
+      word-break: break-word;
+    }
+    .memo-editor:focus {
+      border-color: var(--accent);
+      background: #fff;
+    }
+    .memo-editor img {
+      max-width: 100px;
+      max-height: 100px;
+      vertical-align: middle;
+      margin: 2px 4px;
+      border-radius: 6px;
+    }
+    .memo-editor.empty:before {
+      content: attr(data-placeholder);
+      color: #c2a3b0;
+      pointer-events: none;
+    }
+
+    .form-actions {
       display: flex;
       justify-content: flex-end;
-      margin-bottom: 18px;
+      gap: 8px;
+      margin-top: 16px;
     }
-    .new-btn {
-      padding: 10px 22px;
+    .btn {
+      padding: 10px 26px;
       border: none;
       border-radius: 999px;
-      background: var(--accent);
-      color: #fff;
       font-family: 'Gaegu', cursive;
-      font-size: 17px;
+      font-size: 18px;
       font-weight: 700;
       cursor: pointer;
       transition: all .15s;
     }
-    .new-btn:hover { background: var(--accent-deep); }
+    .btn.primary { background: var(--accent); color: #fff; }
+    .btn.primary:hover { background: var(--accent-deep); }
+    .btn.primary:disabled { opacity: 0.5; cursor: not-allowed; }
+    .btn.ghost {
+      background: transparent;
+      color: #8a6f7a;
+      border: 2px solid var(--accent-soft);
+    }
+    .btn.ghost:hover { background: var(--accent-soft); }
 
+    /* ─── post-it 카드 그리드 ─── */
     .memo-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-      gap: 16px;
-      min-height: 80px;
+      gap: 28px;
+      padding: 14px 8px;
     }
+
     .memo-card {
-      background: var(--paper);
-      border: 2px solid var(--accent-soft);
-      border-radius: 18px;
-      padding: 18px;
-      min-height: 140px;
-      box-shadow: 2px 4px 0 rgba(0,0,0,0.04);
+      position: relative;
+      background: #fff5b1;
+      padding: 28px 18px 22px;
+      min-height: 160px;
+      border-radius: 4px;
+      box-shadow:
+        0 1px 1px rgba(0,0,0,0.04),
+        0 6px 12px rgba(0,0,0,0.10),
+        0 12px 24px rgba(0,0,0,0.06);
+      font-family: 'Gowun Dodum', sans-serif;
+      color: #2d2226;
+      transition: transform .25s, box-shadow .25s;
+    }
+
+    /* 카드별로 살짝 다른 회전각 — 손글씨 메모 느낌 */
+    .memo-card:nth-child(3n+1) { transform: rotate(-1.6deg); }
+    .memo-card:nth-child(3n+2) { transform: rotate(1.2deg); }
+    .memo-card:nth-child(3n+3) { transform: rotate(-0.4deg); }
+    .memo-card:hover {
+      transform: rotate(0) translateY(-5px) !important;
+      box-shadow:
+        0 2px 2px rgba(0,0,0,0.06),
+        0 12px 18px rgba(0,0,0,0.12),
+        0 18px 30px rgba(0,0,0,0.08);
+      z-index: 2;
+    }
+
+    /* 작성자별 카드 색 */
+    .memo-card.author-mom    { background: #ffe2e2; }
+    .memo-card.author-dad    { background: #e1eef9; }
+    .memo-card.author-dasom  { background: #fff5b1; }
+
+    /* 위 테이프 */
+    .memo-card::before {
+      content: '';
+      position: absolute;
+      top: -10px;
+      left: 50%;
+      transform: translateX(-50%) rotate(-3deg);
+      width: 70px;
+      height: 18px;
+      background: rgba(255,255,255,0.6);
+      border: 1px solid rgba(0,0,0,0.05);
+      box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+    }
+
+    .memo-card .author-tag {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 999px;
+      font-family: 'Gaegu', cursive;
+      font-size: 14px;
+      font-weight: 700;
+      margin-bottom: 12px;
+      letter-spacing: 1px;
+    }
+    .memo-card.author-mom    .author-tag { background: var(--au-mom); color: #fff; }
+    .memo-card.author-dad    .author-tag { background: var(--au-dad); color: #fff; }
+    .memo-card.author-dasom  .author-tag { background: var(--au-da);  color: #6b5400; }
+
+    .memo-card .memo-body {
+      font-size: 15px;
+      line-height: 1.7;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+    .memo-card .memo-body img {
+      max-width: 90px;
+      max-height: 90px;
+      vertical-align: middle;
+      margin: 2px 4px;
+      border-radius: 4px;
+    }
+
+    .memo-card .memo-time {
+      margin-top: 12px;
+      font-size: 11px;
+      color: #8a7a6f;
+      text-align: right;
+    }
+
+    .memo-card .memo-del {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      border: none;
+      background: rgba(0,0,0,0.06);
+      color: #555;
+      cursor: pointer;
+      font-size: 14px;
+      line-height: 1;
+      opacity: 0;
       transition: all .15s;
     }
-    .memo-card:hover {
-      transform: translateY(-3px) rotate(-1deg);
-      box-shadow: 4px 8px 0 rgba(0,0,0,0.06);
+    .memo-card:hover .memo-del { opacity: 1; }
+    .memo-card .memo-del:hover {
+      background: #c97070;
+      color: #fff;
     }
-    .memo-card .memo-title {
-      font-family: 'Gaegu', cursive;
-      font-size: 18px;
-      font-weight: 700;
-      color: var(--accent-deep);
-      margin: 0 0 8px;
-    }
-    .memo-card .memo-body {
-      font-size: 14px;
-      color: #6b4a55;
-      line-height: 1.6;
+
+    @media (max-width: 640px) {
+      .memo-form { padding: 18px; }
+      .memo-card .memo-del { opacity: 1; }
     }
   </style>
 </head>
@@ -80,24 +300,327 @@
   <main class="page">
     <section class="card">
       <h1 class="page-title">📝 메모장</h1>
-      <p class="page-subtitle">가족과 나누는 다정한 메모들이에요.</p>
+      <p class="page-subtitle">작성자를 고르고 이미지·글로 메모를 남겨보세요.</p>
 
-      <div class="memo-toolbar">
-        <button class="new-btn" disabled>+ 새 메모</button>
-      </div>
+      <!-- 새 메모 작성 폼 -->
+      <form id="memoForm" class="memo-form" autocomplete="off">
+        <div class="form-section">
+          <label class="form-label">작성자</label>
+          <div class="author-row">
+            <button type="button" class="author-btn" data-author="mom"><span class="au-dot"></span>엄마</button>
+            <button type="button" class="author-btn" data-author="dad"><span class="au-dot"></span>아빠</button>
+            <button type="button" class="author-btn" data-author="dasom"><span class="au-dot"></span>다솜</button>
+          </div>
+        </div>
 
-      <div class="memo-grid" id="memoGrid">
-        <!-- 비어있음: empty state로 대체 -->
-      </div>
+        <div class="form-section" id="imagePickerSection" hidden>
+          <label class="form-label">이미지 (눌러서 본문에 추가)</label>
+          <div class="image-picker" id="imagePicker"></div>
+        </div>
 
-      <div class="empty-state">
-        <img src="11/26.png" alt="" />
-        <div class="msg">아직 메모가 없어요</div>
-        <div class="sub">곧 가족 메모를 쓸 수 있게 될 거예요.</div>
-      </div>
+        <div class="form-section">
+          <label class="form-label" for="memoEditor">본문</label>
+          <div class="memo-editor empty" id="memoEditor" contenteditable="true"
+               data-placeholder="메모를 적어주세요" spellcheck="false"></div>
+        </div>
+
+        <div class="form-actions">
+          <button type="button" class="btn ghost" id="btnReset">지우기</button>
+          <button type="submit" class="btn primary" id="btnSave">저장</button>
+        </div>
+      </form>
+
+      <!-- 저장된 메모 카드들 -->
+      <div class="memo-grid" id="memoGrid"></div>
     </section>
   </main>
 
   <footer class="app-footer">made with ♥ for 다솜이네 가족</footer>
+
+  <script type="module">
+  /* ───────────────────────────────────────────
+   * 다솜이네 — 메모장 (Firestore 연동)
+   * dasom_memos 컬렉션에 실시간 동기화됩니다.
+   * ─────────────────────────────────────────── */
+  import {
+    db, COLS,
+    collection, doc,
+    addDoc, deleteDoc,
+    onSnapshot, serverTimestamp,
+    ensureSignedIn,
+  } from './js/firebase-init.js';
+
+  // 인증 보장
+  try {
+    await ensureSignedIn();
+  } catch (e) {
+    console.error('Firebase 인증 실패', e);
+    alert('인증이 만료됐어요. 다시 로그인해 주세요.');
+    sessionStorage.removeItem('dasom_family_auth');
+    location.replace('index.html');
+    throw e;
+  }
+
+  (function () {
+    'use strict';
+
+    // 작성자 ↔ 이미지 폴더 매핑
+    const AUTHORS = {
+      mom: {
+        label: '엄마',
+        folder: '14',
+        files: ['11.png','12.png','13.png','14.png','15.png','16.png',
+                '21.png','22.png','23.png','24.png','25.png','26.png'],
+      },
+      dad: {
+        label: '아빠',
+        folder: '13',
+        files: ['11.png','12.png','13.png','14.png','15.png','16.png','17.png','18.png'],
+      },
+      dasom: {
+        label: '다솜',
+        folder: '12',
+        files: ['b1.png','b2.png','b3.png','b4.png','b5.png','b6.png','b7.png',
+                'b8.png','b9.png','b10.png','b11.png','b12.png','b13.png'],
+      },
+    };
+
+    const memosRef = collection(db, COLS.memos);
+
+    // ─── DOM ───
+    const form = document.getElementById('memoForm');
+    const editor = document.getElementById('memoEditor');
+    const authorRow = form.querySelector('.author-row');
+    const pickerSection = document.getElementById('imagePickerSection');
+    const picker = document.getElementById('imagePicker');
+    const btnSave = document.getElementById('btnSave');
+    const btnReset = document.getElementById('btnReset');
+    const grid = document.getElementById('memoGrid');
+
+    let selectedAuthor = null;
+    let cache = [];
+
+    // ─── 작성자 선택 ───
+    authorRow.addEventListener('click', (e) => {
+      const btn = e.target.closest('.author-btn');
+      if (!btn) return;
+      const a = btn.dataset.author;
+      if (selectedAuthor === a) {
+        // 토글: 같은 버튼 다시 누르면 해제
+        selectedAuthor = null;
+        btn.classList.remove('selected');
+        pickerSection.hidden = true;
+        return;
+      }
+      selectedAuthor = a;
+      authorRow.querySelectorAll('.author-btn').forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+      renderPicker(a);
+    });
+
+    function renderPicker(authorKey) {
+      const meta = AUTHORS[authorKey];
+      picker.innerHTML = '';
+      meta.files.forEach(f => {
+        const b = document.createElement('button');
+        b.type = 'button';
+        b.title = `${meta.folder}/${f}`;
+        const img = document.createElement('img');
+        img.src = `${meta.folder}/${f}`;
+        img.alt = '';
+        b.appendChild(img);
+        // mousedown 으로 default 막아 contenteditable 포커스 보존
+        b.addEventListener('mousedown', (ev) => ev.preventDefault());
+        b.addEventListener('click', () => insertImage(`${meta.folder}/${f}`));
+        picker.appendChild(b);
+      });
+      pickerSection.hidden = false;
+    }
+
+    // ─── 본문 에디터 ───
+    function updateEmpty() {
+      const html = editor.innerHTML.replace(/<br\s*\/?>/gi, '').trim();
+      editor.classList.toggle('empty', html === '');
+    }
+    editor.addEventListener('input', updateEmpty);
+    editor.addEventListener('focus', updateEmpty);
+
+    function insertImage(src) {
+      editor.focus();
+      const img = document.createElement('img');
+      img.src = src;
+      img.alt = '';
+      const sel = window.getSelection();
+      let inserted = false;
+      if (sel && sel.rangeCount) {
+        const range = sel.getRangeAt(0);
+        if (editor.contains(range.commonAncestorContainer)) {
+          range.deleteContents();
+          range.insertNode(img);
+          // 커서를 이미지 뒤로 이동
+          range.setStartAfter(img);
+          range.setEndAfter(img);
+          sel.removeAllRanges();
+          sel.addRange(range);
+          inserted = true;
+        }
+      }
+      if (!inserted) {
+        editor.appendChild(img);
+        // 커서 끝으로
+        const range = document.createRange();
+        range.selectNodeContents(editor);
+        range.collapse(false);
+        const sel2 = window.getSelection();
+        sel2.removeAllRanges();
+        sel2.addRange(range);
+      }
+      updateEmpty();
+    }
+
+    // ─── 저장 / 초기화 ───
+    function resetForm() {
+      editor.innerHTML = '';
+      updateEmpty();
+      // 작성자 선택은 유지 (연달아 같은 사람 메모 쓰기 편하게)
+    }
+
+    btnReset.addEventListener('click', () => {
+      resetForm();
+      editor.focus();
+    });
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (!selectedAuthor) {
+        alert('작성자를 먼저 선택해주세요.');
+        return;
+      }
+      const html = sanitizeHtml(editor.innerHTML);
+      const plain = html.replace(/<[^>]+>/g, '').trim();
+      const hasImg = /<img\s/i.test(html);
+      if (!plain && !hasImg) {
+        alert('내용을 입력해주세요.');
+        return;
+      }
+      btnSave.disabled = true;
+      try {
+        await addDoc(memosRef, {
+          author: selectedAuthor,
+          html,
+          createdAt: serverTimestamp(),
+        });
+        resetForm();
+      } catch (err) {
+        console.error(err);
+        alert('저장에 실패했어요: ' + err.message);
+      } finally {
+        btnSave.disabled = false;
+      }
+    });
+
+    // ─── HTML 정제 (보안: 텍스트 / <br> / <img src="12|13|14/..."> 만 허용) ───
+    function sanitizeHtml(rawHtml) {
+      const tmp = document.createElement('div');
+      tmp.innerHTML = rawHtml;
+      const validImgSrc = /^(?:12|13|14)\/[A-Za-z0-9_.\-]+\.(?:png|jpg|jpeg|webp|gif)$/i;
+
+      function clean(node) {
+        Array.from(node.childNodes).forEach(child => {
+          if (child.nodeType === Node.TEXT_NODE) return;
+          if (child.nodeType !== Node.ELEMENT_NODE) {
+            child.remove();
+            return;
+          }
+          const tag = child.tagName.toLowerCase();
+          if (tag === 'br') {
+            // OK
+            return;
+          }
+          if (tag === 'img') {
+            const src = child.getAttribute('src') || '';
+            if (!validImgSrc.test(src)) { child.remove(); return; }
+            // 다른 속성 제거
+            Array.from(child.attributes).forEach(attr => {
+              if (attr.name !== 'src' && attr.name !== 'alt') {
+                child.removeAttribute(attr.name);
+              }
+            });
+            return;
+          }
+          if (tag === 'div' || tag === 'p') {
+            // 줄바꿈으로 변환 후 자식 노드만 보존
+            const br = document.createElement('br');
+            node.insertBefore(br, child);
+            while (child.firstChild) node.insertBefore(child.firstChild, child);
+            child.remove();
+            // 새로 끼워진 노드들은 다음 forEach 사이클에서 다뤄지지 않음 → 별도 정제 위해 클린 재실행
+            clean(node);
+            return;
+          }
+          // 그 외 태그 → 텍스트만 살림
+          const text = document.createTextNode(child.textContent || '');
+          node.replaceChild(text, child);
+        });
+      }
+      clean(tmp);
+      // 끝에 br 정리
+      let html = tmp.innerHTML.replace(/(<br\s*\/?>\s*)+$/i, '').trim();
+      return html;
+    }
+
+    // ─── 카드 렌더 ───
+    function tsSeconds(t) { return (t && t.seconds) || 0; }
+
+    function render() {
+      grid.innerHTML = '';
+      // 최근 작성 순
+      const sorted = cache.slice().sort((a, b) => tsSeconds(b.createdAt) - tsSeconds(a.createdAt));
+      sorted.forEach(m => {
+        const card = document.createElement('div');
+        card.className = 'memo-card author-' + (m.author || 'dasom');
+        const meta = AUTHORS[m.author] || AUTHORS.dasom;
+        const safe = sanitizeHtml(m.html || '');
+        const time = m.createdAt && m.createdAt.toDate ? formatDate(m.createdAt.toDate()) : '';
+        card.innerHTML = `
+          <button type="button" class="memo-del" title="삭제" aria-label="삭제">✕</button>
+          <span class="author-tag">${meta.label}</span>
+          <div class="memo-body">${safe}</div>
+          ${time ? `<div class="memo-time">${time}</div>` : ''}
+        `;
+        card.querySelector('.memo-del').onclick = async () => {
+          if (!confirm('이 메모를 삭제할까요?')) return;
+          try {
+            await deleteDoc(doc(db, COLS.memos, m.id));
+          } catch (err) {
+            console.error(err);
+            alert('삭제에 실패했어요: ' + err.message);
+          }
+        };
+        grid.appendChild(card);
+      });
+    }
+
+    function formatDate(d) {
+      const yy = String(d.getFullYear()).slice(2);
+      const mm = String(d.getMonth() + 1).padStart(2, '0');
+      const dd = String(d.getDate()).padStart(2, '0');
+      const hh = String(d.getHours()).padStart(2, '0');
+      const mi = String(d.getMinutes()).padStart(2, '0');
+      return `${yy}.${mm}.${dd} ${hh}:${mi}`;
+    }
+
+    // ─── 실시간 구독 ───
+    onSnapshot(memosRef, (snap) => {
+      cache = [];
+      snap.forEach(d => cache.push({ id: d.id, ...d.data() }));
+      render();
+    }, (err) => {
+      console.error('[Firestore] memos onSnapshot error', err);
+    });
+
+    updateEmpty();
+  })();
+  </script>
 </body>
 </html>
