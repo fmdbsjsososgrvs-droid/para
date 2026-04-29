@@ -180,12 +180,6 @@
       </div>
 
       <ul class="todo-list" id="todoList"></ul>
-
-      <div class="empty-state" id="emptyState">
-        <img src="11/22.png" alt="" />
-        <div class="msg">아직 할 일이 없어요</div>
-        <div class="sub">위 입력칸에 할 일을 적어보세요.</div>
-      </div>
     </section>
   </main>
 
@@ -222,7 +216,6 @@
 
     // ─── DOM ───
     const list = document.getElementById('todoList');
-    const empty = document.getElementById('emptyState');
     const stats = document.getElementById('todoStats');
     const leftCountEl = document.getElementById('leftCount');
     const doneCountEl = document.getElementById('doneCount');
@@ -245,11 +238,9 @@
     function render() {
       if (cache.length === 0) {
         list.innerHTML = '';
-        empty.hidden = false;
         stats.hidden = true;
         return;
       }
-      empty.hidden = true;
       stats.hidden = false;
 
       // 미완료(오래된 순) → 완료(최근 순)
