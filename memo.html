@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>메모장 — 다솜이네</title>
+  <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&family=Gaegu:wght@400;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+  <script src="js/guard.js"></script>
+  <style>
+    .memo-toolbar {
+      display: flex;
+      justify-content: flex-end;
+      margin-bottom: 18px;
+    }
+    .new-btn {
+      padding: 10px 22px;
+      border: none;
+      border-radius: 999px;
+      background: var(--accent);
+      color: #fff;
+      font-family: 'Gaegu', cursive;
+      font-size: 17px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all .15s;
+    }
+    .new-btn:hover { background: var(--accent-deep); }
+
+    .memo-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 16px;
+      min-height: 80px;
+    }
+    .memo-card {
+      background: var(--paper);
+      border: 2px solid var(--accent-soft);
+      border-radius: 18px;
+      padding: 18px;
+      min-height: 140px;
+      box-shadow: 2px 4px 0 rgba(0,0,0,0.04);
+      transition: all .15s;
+    }
+    .memo-card:hover {
+      transform: translateY(-3px) rotate(-1deg);
+      box-shadow: 4px 8px 0 rgba(0,0,0,0.06);
+    }
+    .memo-card .memo-title {
+      font-family: 'Gaegu', cursive;
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--accent-deep);
+      margin: 0 0 8px;
+    }
+    .memo-card .memo-body {
+      font-size: 14px;
+      color: #6b4a55;
+      line-height: 1.6;
+    }
+  </style>
+</head>
+<body class="theme-memo">
+
+  <header class="app-header">
+    <div class="brand">
+      <img src="11/dasom.png" alt="" />
+      <span>다솜이네</span>
+    </div>
+    <button id="logout" class="logout-btn">나가기</button>
+  </header>
+
+  <nav class="main-nav">
+    <a href="home.html" class="nav-link">다솜이네</a>
+    <a href="calendar.html" class="nav-link">달력</a>
+    <a href="todo.html" class="nav-link">해야 할일</a>
+    <a href="memo.html" class="nav-link active">메모장</a>
+  </nav>
+
+  <main class="page">
+    <section class="card">
+      <h1 class="page-title">📝 메모장</h1>
+      <p class="page-subtitle">가족과 나누는 다정한 메모들이에요.</p>
+
+      <div class="memo-toolbar">
+        <button class="new-btn" disabled>+ 새 메모</button>
+      </div>
+
+      <div class="memo-grid" id="memoGrid">
+        <!-- 비어있음: empty state로 대체 -->
+      </div>
+
+      <div class="empty-state">
+        <img src="11/26.png" alt="" />
+        <div class="msg">아직 메모가 없어요</div>
+        <div class="sub">곧 가족 메모를 쓸 수 있게 될 거예요.</div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="app-footer">made with ♥ for 다솜이네 가족</footer>
+</body>
+</html>

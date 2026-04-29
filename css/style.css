@@ -1,0 +1,209 @@
+/* ───────────────────────────────────────────
+ * 다솜이네 가족 — 공통 스타일
+ * 각 페이지는 body에 .theme-* 클래스를 붙여
+ * 파스텔 테마를 다르게 적용합니다.
+ * ─────────────────────────────────────────── */
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Gowun Dodum', 'Gaegu', 'Apple SD Gothic Neo', sans-serif;
+  color: #5a4651;
+  min-height: 100vh;
+}
+
+a { text-decoration: none; color: inherit; }
+img { max-width: 100%; }
+
+/* ─── 테마별 배경 ─── */
+.theme-home {
+  --accent:        #ff9eb7;
+  --accent-soft:   #ffd1dc;
+  --accent-deep:   #d96a8a;
+  --paper:         #fff7fb;
+  background:
+    radial-gradient(circle at 10% 0%,  #ffe2ec 0%, transparent 45%),
+    radial-gradient(circle at 100% 30%, #fff4d6 0%, transparent 50%),
+    linear-gradient(180deg, #fff8fb 0%, #fef0f5 100%);
+}
+.theme-calendar {
+  --accent:        #7ec8d9;
+  --accent-soft:   #c8ecf3;
+  --accent-deep:   #4ca0b3;
+  --paper:         #f3fbfc;
+  background:
+    radial-gradient(circle at 0% 10%,  #d4f1f4 0%, transparent 45%),
+    radial-gradient(circle at 100% 90%, #e7f7e1 0%, transparent 50%),
+    linear-gradient(180deg, #f3fbfc 0%, #eaf6f4 100%);
+}
+.theme-todo {
+  --accent:        #b8a4dc;
+  --accent-soft:   #e0d4f3;
+  --accent-deep:   #8b73c0;
+  --paper:         #f9f5ff;
+  background:
+    radial-gradient(circle at 0% 0%,   #ece1fa 0%, transparent 45%),
+    radial-gradient(circle at 100% 100%, #fde2f3 0%, transparent 50%),
+    linear-gradient(180deg, #f9f5ff 0%, #f1e8fa 100%);
+}
+.theme-memo {
+  --accent:        #f4c87a;
+  --accent-soft:   #fde6b8;
+  --accent-deep:   #c79544;
+  --paper:         #fffaee;
+  background:
+    radial-gradient(circle at 0% 100%,  #fff1cc 0%, transparent 45%),
+    radial-gradient(circle at 100% 0%,  #ffe0c2 0%, transparent 50%),
+    linear-gradient(180deg, #fffbf0 0%, #fff2da 100%);
+}
+
+/* ─── 상단 헤더 ─── */
+.app-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 32px;
+  background: rgba(255, 255, 255, 0.65);
+  backdrop-filter: blur(12px);
+  border-bottom: 2px solid var(--accent-soft, #ffd1dc);
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-family: 'Gaegu', cursive;
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--accent-deep, #d96a8a);
+  letter-spacing: 1px;
+}
+.brand img {
+  width: 42px;
+  height: 42px;
+  object-fit: contain;
+}
+.logout-btn {
+  background: transparent;
+  border: 2px solid var(--accent-soft);
+  color: var(--accent-deep);
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-family: inherit;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all .2s;
+}
+.logout-btn:hover {
+  background: var(--accent-soft);
+}
+
+/* ─── 메인 네비 ─── */
+.main-nav {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  padding: 14px 16px 6px;
+  flex-wrap: wrap;
+}
+.nav-link {
+  padding: 10px 22px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.55);
+  border: 2px solid transparent;
+  font-family: 'Gaegu', cursive;
+  font-size: 18px;
+  font-weight: 700;
+  color: #8a6f7a;
+  transition: all .2s;
+}
+.nav-link:hover {
+  background: rgba(255, 255, 255, 0.9);
+  transform: translateY(-2px);
+}
+.nav-link.active {
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent-deep);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+}
+
+/* ─── 콘텐츠 카드 ─── */
+.page {
+  max-width: 1100px;
+  margin: 28px auto 60px;
+  padding: 0 24px;
+}
+.card {
+  background: rgba(255, 255, 255, 0.78);
+  backdrop-filter: blur(8px);
+  border: 2px solid var(--accent-soft);
+  border-radius: 28px;
+  padding: 36px 40px;
+  box-shadow: 0 12px 36px rgba(0,0,0,0.06);
+}
+
+.page-title {
+  font-family: 'Gaegu', cursive;
+  font-size: 34px;
+  font-weight: 700;
+  color: var(--accent-deep);
+  margin: 0 0 8px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.page-subtitle {
+  margin: 0 0 28px;
+  color: #8a6f7a;
+  font-size: 15px;
+}
+
+/* ─── 빈 상태(틀만) ─── */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  color: #a48b96;
+  text-align: center;
+  gap: 14px;
+}
+.empty-state img {
+  width: 130px;
+  height: 130px;
+  object-fit: contain;
+  opacity: 0.85;
+}
+.empty-state .msg {
+  font-family: 'Gaegu', cursive;
+  font-size: 22px;
+  color: var(--accent-deep);
+}
+.empty-state .sub {
+  font-size: 13px;
+  color: #b39aa6;
+}
+
+/* ─── 푸터 ─── */
+.app-footer {
+  text-align: center;
+  padding: 20px;
+  color: #b39aa6;
+  font-size: 13px;
+}
+
+/* ─── 모바일 ─── */
+@media (max-width: 640px) {
+  .app-header { padding: 14px 18px; }
+  .brand { font-size: 22px; }
+  .brand img { width: 36px; height: 36px; }
+  .card { padding: 26px 22px; border-radius: 22px; }
+  .page-title { font-size: 28px; }
+  .nav-link { padding: 8px 16px; font-size: 16px; }
+}
