@@ -24,9 +24,12 @@
       display: flex;
       gap: 10px;
       margin-bottom: 18px;
+      width: 100%;
+      min-width: 0;
     }
     .add-row input {
-      flex: 1;
+      flex: 1 1 0;
+      min-width: 0;          /* 모바일에서 카드 밖으로 삐져나가는 것 방지 */
       padding: 12px 18px;
       border: 2px solid var(--accent-soft);
       border-radius: 999px;
@@ -43,6 +46,7 @@
       background: #fff;
     }
     .add-row button {
+      flex-shrink: 0;        /* 추가 버튼은 줄어들지 않음 */
       padding: 0 24px;
       border: none;
       border-radius: 999px;
@@ -54,6 +58,11 @@
       cursor: pointer;
       transition: all .15s;
       white-space: nowrap;
+    }
+    @media (max-width: 480px) {
+      .add-row { gap: 8px; }
+      .add-row input { padding: 11px 16px; font-size: 18px; }
+      .add-row button { padding: 0 18px; font-size: 17px; }
     }
     .add-row button:hover { background: var(--accent-deep); }
     .add-row button:disabled { opacity: 0.5; cursor: not-allowed; }

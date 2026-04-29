@@ -353,6 +353,43 @@
       margin-right: 4px;
       vertical-align: middle;
     }
+
+    /* ─── 모바일: 셀이 좁아져 텍스트가 안 들어가므로 칩을 색 점으로 변환 ─── */
+    @media (max-width: 640px) {
+      .cal-cell { padding: 5px 4px; font-size: 13px; }
+      .cal-cell .day-num { font-size: 13px; }
+
+      .ev-mini {
+        margin-top: 3px;
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 3px;
+        align-content: flex-start;
+      }
+      .ev-chip {
+        font-size: 0 !important;        /* 텍스트 숨김 */
+        line-height: 0;
+        padding: 0 !important;
+        width: 8px;
+        height: 8px;
+        min-height: 8px;
+        border-radius: 50%;
+        border-left: none !important;   /* 좌측 색띠 → 원형 점으로 대체 */
+        flex: 0 0 auto;
+      }
+      /* 점은 진한 카테고리 색으로 (잘 보이도록) */
+      .ev-chip.cat-all { background: var(--cat-all); }
+      .ev-chip.cat-mom { background: var(--cat-mom); }
+      .ev-chip.cat-dad { background: var(--cat-dad); }
+      .ev-chip.cat-da  { background: var(--cat-da); }
+
+      .ev-more {
+        font-size: 10px;
+        padding: 0;
+        color: #444;
+      }
+      .cal-cell.today .ev-more { color: #fff; }
+    }
   </style>
 </head>
 <body class="theme-calendar">
