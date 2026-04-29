@@ -8,6 +8,15 @@
   <link rel="stylesheet" href="css/style.css" />
   <script src="js/guard.js"></script>
   <style>
+    /* 온글잎 긍정 — 자체 호스팅 (fonts/Ownglyph_Geungjeong.ttf) */
+    @font-face {
+      font-family: 'Ownglyph Geungjeong';
+      src: url('fonts/Ownglyph_Geungjeong.ttf') format('truetype');
+      font-weight: normal;
+      font-style: normal;
+      font-display: swap;
+    }
+
     .add-row {
       display: flex;
       gap: 10px;
@@ -19,9 +28,10 @@
       border: 2px solid var(--accent-soft);
       border-radius: 999px;
       background: var(--paper);
-      font-family: inherit;
-      font-size: 15px;
-      color: #5a4651;
+      font-family: 'Ownglyph Geungjeong', 'Gaegu', 'Apple SD Gothic Neo', '돋움', sans-serif;
+      font-size: 20px;
+      letter-spacing: 0.3px;
+      color: #2a2125;
       outline: none;
       transition: all .15s;
     }
@@ -117,10 +127,11 @@
     .todo-list .text {
       flex: 1;
       color: #1a1a1a;
-      font-size: 16px;
-      font-weight: 500;
+      font-family: 'Ownglyph Geungjeong', 'Gaegu', 'Apple SD Gothic Neo', '돋움', sans-serif;
+      font-size: 22px;
+      letter-spacing: 0.3px;
       word-break: break-word;
-      line-height: 1.4;
+      line-height: 1.45;
     }
 
     .todo-list .del-btn {
@@ -167,7 +178,6 @@
   <main class="page">
     <section class="card">
       <h1 class="page-title">✓ 해야 할일</h1>
-      <p class="page-subtitle">함께 챙길 가족의 일들이에요.</p>
 
       <form id="todoForm" class="add-row" autocomplete="off">
         <input type="text" id="todoInput" placeholder="할 일을 적어주세요" maxlength="200" required />
