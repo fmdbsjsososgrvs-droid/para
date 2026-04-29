@@ -472,7 +472,19 @@
     collection, doc,
     addDoc, updateDoc, deleteDoc,
     onSnapshot, serverTimestamp,
+    ensureSignedIn,
   } from './js/firebase-init.js';
+
+  // Firestore 호출 전 익명 인증 보장 (보안 규칙: request.auth != null)
+  try {
+    await ensureSignedIn();
+  } catch (e) {
+    console.error('Firebase 인증 실패', e);
+    alert('인증이 만료됐어요. 다시 로그인해 주세요.');
+    sessionStorage.removeItem('dasom_family_auth');
+    location.replace('index.html');
+    throw e;
+  }
 
   (function () {
     'use strict';

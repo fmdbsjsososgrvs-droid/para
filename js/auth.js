@@ -1,8 +1,13 @@
-/* 다솜이네 가족 — 비밀번호 인증
- * 평문 비밀번호는 소스에 두지 않고, salt + SHA-256 해시값만 저장.
- * 실제 비밀번호는 salt와 함께 해시되어야 일치하기 때문에
- * 소스코드만 봐서는 원래 비밀번호를 알 수 없습니다.
+/* 다솜이네 가족 — 비밀번호 인증 (모듈)
+ *
+ * 1) 입력 비밀번호를 SALT와 함께 SHA-256 해시
+ * 2) 사전에 저장된 해시와 일치하면
+ *    a) sessionStorage에 인증 토큰 저장
+ *    b) Firebase에 익명 로그인 (Firestore 보안 규칙 통과용)
+ *    c) home.html 으로 이동
  */
+import { ensureSignedIn } from './firebase-init.js';
+
 (function () {
   'use strict';
 
@@ -27,18 +32,17 @@
 
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
-    err.textContent = ' ';
+    err.textContent = ' ';
 
     const value = pw.value.trim();
     if (!value) return;
 
+    const submitBtn = form.querySelector('button[type="submit"]');
+    if (submitBtn) submitBtn.disabled = true;
+
     try {
       const hashed = await sha256(`${SALT}:${value}`);
-      if (hashed === PW_HASH) {
-        // 인증 성공 → 세션에 짧은 토큰 저장
-        sessionStorage.setItem(SESSION_KEY, hashed);
-        location.href = 'home.html';
-      } else {
+      if (hashed !== PW_HASH) {
         err.textContent = '비밀번호가 달라요 🥲';
         pw.value = '';
         pw.focus();
@@ -46,9 +50,26 @@
         err.style.animation = 'none';
         void err.offsetWidth;
         err.style.animation = '';
+        return;
       }
-    } catch (e2) {
+
+      // Firebase 익명 로그인 (Firestore 권한 획득)
+      try {
+        await ensureSignedIn();
+      } catch (e2) {
+        console.error(e2);
+        err.textContent = '서버 인증에 실패했어요. 잠시 후 다시 시도해주세요.';
+        return;
+      }
+
+      // 인증 성공
+      sessionStorage.setItem(SESSION_KEY, hashed);
+      location.href = 'home.html';
+    } catch (e3) {
+      console.error(e3);
       err.textContent = '브라우저가 너무 오래된 것 같아요';
+    } finally {
+      if (submitBtn) submitBtn.disabled = false;
     }
   });
 
