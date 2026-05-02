@@ -3,232 +3,190 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>다솜이네 가족</title>
-  <link rel="icon" type="image/png" href="favicon.png" />
-  <link rel="apple-touch-icon" href="favicon.png" />
-  <link rel="apple-touch-icon-precomposed" href="favicon.png" />
-  <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&family=Gaegu:wght@400;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="css/style.css" />
+  <title>PARAPARA — DASOM's Blog</title>
+  <link rel="stylesheet" href="style.css" />
   <style>
-    body {
-      margin: 0;
-      min-height: 100vh;
-      font-family: 'Gowun Dodum', 'Gaegu', sans-serif;
-      background:
-        radial-gradient(circle at 15% 20%, #ffe2ec 0%, transparent 40%),
-        radial-gradient(circle at 85% 15%, #fff4d6 0%, transparent 45%),
-        radial-gradient(circle at 50% 90%, #e3f0ff 0%, transparent 50%),
-        linear-gradient(135deg, #fff7fb 0%, #fef6e4 100%);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      overflow: hidden;
+    /* 코너 장식 애니메이션 */
+    @keyframes cornerTL {
+      from { top: calc(50% - 24px); left: calc(50% - 24px); opacity: 0; }
+      10% { opacity: 1; }
+      to   { top: 20px; left: 20px; opacity: 1; }
+    }
+    @keyframes cornerBR {
+      from { bottom: calc(50% - 24px); right: calc(50% - 24px); opacity: 0; }
+      10% { opacity: 1; }
+      to   { bottom: 20px; right: 20px; opacity: 1; }
+    }
+
+    /* 콘텐츠 페이드인 */
+    @keyframes heroFadeIn {
+      from { opacity: 0; transform: translateY(14px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* 좌상단 코너 오버라이드 */
+    .hero::after {
+      animation: cornerTL 0.9s cubic-bezier(.4,0,.2,1) forwards;
+    }
+
+    /* 우하단 코너 오버라이드 */
+    .hero-corner-br {
+      animation: cornerBR 0.9s cubic-bezier(.4,0,.2,1) forwards;
+    }
+
+    /* 콘텐츠 래퍼 */
+    .hero-content {
+      opacity: 0;
+      animation: heroFadeIn 0.7s ease forwards;
+      animation-delay: 1s;
       position: relative;
-    }
-
-    /* 떠다니는 하트 */
-    .heart {
-      position: absolute;
-      color: #ffb6c1;
-      opacity: 0.6;
-      animation: floatHeart 8s ease-in infinite;
-      font-size: 24px;
-      pointer-events: none;
-    }
-    .heart:nth-child(1) { left: 10%; animation-delay: 0s; }
-    .heart:nth-child(2) { left: 25%; animation-delay: 2s; font-size: 18px; color: #ffd5e5;}
-    .heart:nth-child(3) { left: 50%; animation-delay: 4s; font-size: 28px; color: #ffc0cb;}
-    .heart:nth-child(4) { left: 70%; animation-delay: 1s; font-size: 20px; color: #ffe0ec;}
-    .heart:nth-child(5) { left: 85%; animation-delay: 3s; font-size: 22px; color: #ffb6c1;}
-    .heart:nth-child(6) { left: 35%; animation-delay: 5s; font-size: 26px; color: #ffcad4;}
-
-    @keyframes floatHeart {
-      0%   { bottom: -40px; transform: translateX(0) rotate(0deg); opacity: 0;}
-      10%  { opacity: 0.7;}
-      50%  { transform: translateX(20px) rotate(15deg);}
-      90%  { opacity: 0.5;}
-      100% { bottom: 110%; transform: translateX(-20px) rotate(-10deg); opacity: 0;}
-    }
-
-    .gate {
-      background: rgba(255, 255, 255, 0.85);
-      backdrop-filter: blur(10px);
-      border: 3px solid #ffe0ec;
-      border-radius: 32px;
-      padding: 50px 60px 45px;
-      box-shadow: 0 20px 60px rgba(255, 182, 193, 0.35);
-      text-align: center;
-      max-width: 420px;
-      width: 90%;
-      position: relative;
-      z-index: 2;
-    }
-
-    .gate::before {
-      content: '';
-      position: absolute;
-      top: -50px;
-      right: -30px;
-      width: 110px;
-      height: 110px;
-      background: url('11/dasom.png') no-repeat center/contain;
-      transform: rotate(15deg);
-    }
-
-    .gate::after {
-      content: '';
-      position: absolute;
-      bottom: -40px;
-      left: -40px;
-      width: 100px;
-      height: 100px;
-      background: url('11/21.png') no-repeat center/contain;
-      transform: rotate(-12deg);
-    }
-
-    .title {
-      font-family: 'Gaegu', 'Apple SD Gothic Neo', '돋움', sans-serif;
-      font-size: 38px;
-      font-weight: 700;
-      color: #d96a8a;
-      margin: 0 0 8px;
-      letter-spacing: 2px;
-      text-shadow: 2px 2px 0 #fff5f8;
-    }
-
-    .subtitle {
-      font-size: 14px;
-      color: #b88da0;
-      margin-bottom: 30px;
-    }
-
-    .character-row {
-      display: flex;
-      justify-content: center;
-      gap: 8px;
-      margin-bottom: 24px;
-    }
-    .character-row img {
-      width: 70px;
-      height: 70px;
-      object-fit: contain;
-      animation: bounce 2.4s ease-in-out infinite;
-    }
-    .character-row img:nth-child(2) { animation-delay: 0.3s; width: 80px; height: 80px;}
-    .character-row img:nth-child(3) { animation-delay: 0.6s;}
-
-    @keyframes bounce {
-      0%, 100% { transform: translateY(0);}
-      50%      { transform: translateY(-10px);}
-    }
-
-    .pw-form {
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
-    }
-
-    .pw-input {
-      padding: 14px 20px;
-      border: 2px solid #ffd1dc;
-      border-radius: 999px;
-      background: #fff9fb;
-      font-family: 'Gowun Dodum', sans-serif;
-      font-size: 16px;
-      color: #6b4a55;
-      text-align: center;
-      letter-spacing: 4px;
-      outline: none;
-      transition: all .2s;
-    }
-    .pw-input:focus {
-      border-color: #ff9bb5;
-      background: #fff;
-      box-shadow: 0 0 0 4px rgba(255, 182, 193, 0.25);
-    }
-
-    .pw-btn {
-      padding: 13px 24px;
-      border: none;
-      border-radius: 999px;
-      background: linear-gradient(135deg, #ffb6c1 0%, #ffc8a2 100%);
-      color: #fff;
-      font-family: 'Gaegu', 'Apple SD Gothic Neo', '돋움', sans-serif;
-      font-size: 20px;
-      font-weight: 700;
-      letter-spacing: 4px;
-      cursor: pointer;
-      box-shadow: 0 6px 18px rgba(255, 150, 170, 0.45);
-      transition: all .2s;
-    }
-    .pw-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 9px 22px rgba(255, 150, 170, 0.55);
-    }
-    .pw-btn:active { transform: translateY(0); }
-
-    .err {
-      min-height: 20px;
-      color: #e06b86;
-      font-size: 14px;
-      margin-top: 4px;
-      animation: shake 0.4s;
-    }
-    @keyframes shake {
-      0%, 100% { transform: translateX(0);}
-      25%      { transform: translateX(-6px);}
-      75%      { transform: translateX(6px);}
-    }
-
-    .footer-note {
-      margin-top: 22px;
-      font-size: 12px;
-      color: #c2a3b0;
-    }
-
-    @media (max-width: 480px) {
-      .gate { padding: 40px 28px 35px; }
-      .title { font-size: 30px; }
-      .gate::before { width: 80px; height: 80px; top: -35px; right: -10px;}
-      .gate::after { width: 75px; height: 75px; bottom: -25px; left: -15px;}
+      z-index: 1;
     }
   </style>
 </head>
 <body>
-  <!-- 떠다니는 하트 -->
-  <span class="heart">♥</span>
-  <span class="heart">♡</span>
-  <span class="heart">♥</span>
-  <span class="heart">♡</span>
-  <span class="heart">♥</span>
-  <span class="heart">♡</span>
 
-  <main class="gate">
-    <h1 class="title">다솜이네 가족</h1>
-    <p class="subtitle">우리 가족만의 따뜻한 공간이에요</p>
+  <header>
+    <div class="header-inner">
+      <div class="header-text">
+        <div class="site-title">DASOM's Blog</div>
+        <div class="site-subtitle">다솜이의 공간입니다🐦</div>
+      </div>
+    </div>
+  </header>
 
-    <div class="character-row">
-      <img src="11/a8.jpg" alt="" />
-      <img src="11/happy.png" alt="" />
-      <img src="11/11.png" alt="" />
+  <nav>
+    <ul>
+      <li><a href="index.html" class="active">PARAPARA</a></li>
+      <li><a href="family.html">Family</a></li>
+      <li><a href="travel.html">Travel</a></li>
+      <li><a href="collection.html">Collection</a></li>
+      <li><a href="reviews.html">Reviews</a></li>
+    </ul>
+  </nav>
+
+  <div class="page-wrap">
+
+    <div class="deco-strip">✦ ✦ ✦ ✦ ✦</div>
+
+    <div class="hero"><div class="hero-corner-br"></div>
+      <div class="hero-content">
+        <div class="hero-icon"><img src="dasom.png" alt="다솜" style="width:140px;height:auto;object-fit:contain;" /></div>
+        <h1>PARAPARA</h1>
+        <p>
+          어서와! 여긴 다솜이의 공간이야!<br />
+          내 이야기를 들어볼래?
+        </p>
+      </div>
     </div>
 
-    <form class="pw-form" id="pwForm" autocomplete="off">
-      <input
-        type="password"
-        id="pw"
-        class="pw-input"
-        placeholder="비밀번호"
-        maxlength="32"
-        required
-      />
-      <button type="submit" class="pw-btn">들어가기</button>
-      <div class="err" id="err">&nbsp;</div>
-    </form>
+    <!-- Recent Posts -->
+    <div class="section-title">📌 최근 글</div>
+    <div class="card-grid">
+      <a href="posts/daily-hangang.html" style="text-decoration:none;color:inherit;">
+        <div class="card">
+          <div class="card-icon">💦</div>
+          <h3>한강중앙공원 금빛수로!</h3>
+          <p>금빛수로에서 물놀이! 또 옷이 젖었지 뭐야 😅 발바닥은 살짝 긁혔지만 재밌었어. 순돌이 산책도 제대로 🐶</p>
+          <div>
+            <span class="tag">Family</span>
+            <span class="tag">한강중앙공원</span>
+            <span class="tag">물놀이</span>
+          </div>
+          <div class="card-date">2026. 05. 02</div>
+        </div>
+      </a>
 
-    <p class="footer-note">사랑하는 가족만 들어올 수 있어요 ♥</p>
-  </main>
+      <a href="posts/daily-lottemall.html" style="text-decoration:none;color:inherit;">
+        <div class="card">
+          <div class="card-icon">🎬</div>
+          <h3>롯데몰에서 영화 + 놀이방!</h3>
+          <p>놀이방 경기 심판 데뷔 📣 이리저리 뛰며 중계까지! 영화는 슈퍼 마리오 갤럭시 🎮 둘 다 재밌었어!</p>
+          <div>
+            <span class="tag">Family</span>
+            <span class="tag">롯데몰</span>
+            <span class="tag">슈퍼마리오</span>
+          </div>
+          <div class="card-date">2026. 05. 01</div>
+        </div>
+      </a>
 
-  <script type="module" src="js/auth.js"></script>
+      <a href="posts/daily-piano-market.html" style="text-decoration:none;color:inherit;">
+        <div class="card">
+          <div class="card-icon">🎹</div>
+          <h3>피아노 학원 마켓데이!</h3>
+          <p>어린이날 기념 마켓데이! 모은 도장으로 장난감 득템 🛍️ 내일부터 학교 6일 동안 안 가! 나이스!</p>
+          <div>
+            <span class="tag">Family</span>
+            <span class="tag">피아노학원</span>
+            <span class="tag">마켓데이</span>
+          </div>
+          <div class="card-date">2026. 04. 30</div>
+        </div>
+      </a>
+
+      <a href="posts/daily-jjajang.html" style="text-decoration:none;color:inherit;">
+        <div class="card">
+          <div class="card-icon">🍜</div>
+          <h3>오늘 급식은 짜장면!</h3>
+          <p>짜장면이 너무 맛있어서 두 그릇 반! 닭다리 양념은 노잼... 내가 제일 좋아하는 건 닭강정과 하와이안 피자 🍕</p>
+          <div>
+            <span class="tag">Family</span>
+            <span class="tag">급식</span>
+            <span class="tag">짜장면</span>
+          </div>
+          <div class="card-date">2026. 04. 29</div>
+        </div>
+      </a>
+
+      <a href="posts/review-seoulland.html" style="text-decoration:none;color:inherit;">
+        <div class="card">
+          <div class="card-icon">🎢</div>
+          <h3>서울랜드에 다녀왔어!</h3>
+          <p>블랙홀 롤러코스터 맨 뒤 탑승! 다트 2발 명중에 빙글빙글 혼자 탑승 성공 🌀 총점 만점!</p>
+          <div>
+            <span class="tag">Family</span>
+            <span class="tag">서울랜드</span>
+            <span class="tag">가족나들이</span>
+          </div>
+          <div class="card-date">2026. 04. 24</div>
+        </div>
+      </a>
+
+      <a href="posts/daily-soonddol.html" style="text-decoration:none;color:inherit;">
+        <div class="card">
+          <div class="card-icon">🐶</div>
+          <h3>우리집 강아지 순돌이</h3>
+          <p>순돌이 엉덩이에 혹이 났는데... 하루 만에 씻은 듯이 나았어. 꾀병?! 😂</p>
+          <div>
+            <span class="tag">Family</span>
+            <span class="tag">순돌이</span>
+            <span class="tag">강아지</span>
+          </div>
+          <div class="card-date">2026. 04. 24</div>
+        </div>
+      </a>
+
+    </div>
+
+    <!-- About -->
+    <div class="section-title">🌰 About</div>
+    <div class="empty-state">
+      <div class="empty-icon"><img src="banjjak.png" alt="파라파라" style="width:80px;height:auto;object-fit:contain;" /></div>
+      <p>
+        파라파라는<br /><br />
+        아침밥으로 꿀피자가 가장 좋아!<br />
+        간식은 아이스크림!<br />
+        주말엔 자전거와 피크닉이지❤️
+      </p>
+    </div>
+
+  </div>
+
+  <footer>
+    <div class="footer-deco">🦉 🐄 🦊 🐤</div>
+    © 2026 DASOM's Blog · All rights reserved
+  </footer>
+
 </body>
 </html>
