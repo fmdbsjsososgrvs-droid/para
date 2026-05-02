@@ -115,34 +115,39 @@
       .fam-filter-grid { grid-template-columns: repeat(3, 1fr); }
     }
 
-    /* ─── 카테고리 색상 시스템 ─── */
-    /* 가족일상 = 초록 / 가족여행 = 파랑 / 기념일 = 보라 / 콜렉션 = 노랑 */
-    .fam-filter-btn[data-filter="가족일상"].active { background: #7eb88e; border-color: #4a8c5e; }
-    .fam-filter-btn[data-filter="가족여행"].active { background: #7eb0d4; border-color: #4a7ba0; }
-    .fam-filter-btn[data-filter="기념일"].active   { background: #b48edc; border-color: #7a4ea0; }
-    .fam-filter-btn[data-filter="콜렉션"].active   { background: #f0c850; border-color: #a07a1a; }
+    /* ─── 카테고리 색상 시스템 (파스텔 톤) ─── */
+    /* 전체=초록 / 가족일상=빨강 / 가족여행=파랑 / 기념일=보라 / 콜렉션=노랑 */
 
-    .fam-filter-btn[data-filter="가족일상"]:hover { border-color: #7eb88e; box-shadow: 0 6px 14px rgba(126,184,142,.22); }
-    .fam-filter-btn[data-filter="가족여행"]:hover { border-color: #7eb0d4; box-shadow: 0 6px 14px rgba(126,176,212,.22); }
-    .fam-filter-btn[data-filter="기념일"]:hover   { border-color: #b48edc; box-shadow: 0 6px 14px rgba(180,142,220,.22); }
-    .fam-filter-btn[data-filter="콜렉션"]:hover   { border-color: #f0c850; box-shadow: 0 6px 14px rgba(240,200,80,.22); }
+    /* 필터 버튼 — active */
+    .fam-filter-btn[data-filter="all"].active     { background: #a8d4ad; border-color: #5a8a60; color: #fff; }
+    .fam-filter-btn[data-filter="가족일상"].active { background: #e8a4a0; border-color: #b6605b; color: #fff; }
+    .fam-filter-btn[data-filter="가족여행"].active { background: #a8c5e0; border-color: #5d8aac; color: #fff; }
+    .fam-filter-btn[data-filter="기념일"].active   { background: #c0aed0; border-color: #836a98; color: #fff; }
+    .fam-filter-btn[data-filter="콜렉션"].active   { background: #e8ce86; border-color: #a08534; color: #fff; }
 
-    /* 카드: 카테고리별 아이콘 배경 + 태그 색 */
-    .fam-card-wrap[data-category="가족일상"] .fam-card-icon { background: #d6ebda; }
-    .fam-card-wrap[data-category="가족일상"] .fam-tag { background: #d6ebda; color: #4a8c5e; }
-    .fam-card-wrap[data-category="가족일상"] .fam-card:hover { border-color: #7eb88e; box-shadow: 0 12px 26px rgba(126,184,142,.22); }
+    /* 필터 버튼 — hover */
+    .fam-filter-btn[data-filter="all"]:hover     { border-color: #a8d4ad; box-shadow: 0 6px 14px rgba(168,212,173,.28); }
+    .fam-filter-btn[data-filter="가족일상"]:hover { border-color: #e8a4a0; box-shadow: 0 6px 14px rgba(232,164,160,.28); }
+    .fam-filter-btn[data-filter="가족여행"]:hover { border-color: #a8c5e0; box-shadow: 0 6px 14px rgba(168,197,224,.28); }
+    .fam-filter-btn[data-filter="기념일"]:hover   { border-color: #c0aed0; box-shadow: 0 6px 14px rgba(192,174,208,.28); }
+    .fam-filter-btn[data-filter="콜렉션"]:hover   { border-color: #e8ce86; box-shadow: 0 6px 14px rgba(232,206,134,.28); }
 
-    .fam-card-wrap[data-category="가족여행"] .fam-card-icon { background: #d6e6f5; }
-    .fam-card-wrap[data-category="가족여행"] .fam-tag { background: #d6e6f5; color: #4a7ba0; }
-    .fam-card-wrap[data-category="가족여행"] .fam-card:hover { border-color: #7eb0d4; box-shadow: 0 12px 26px rgba(126,176,212,.22); }
+    /* 카드 — 카테고리별 아이콘/태그/호버 색상 */
+    .fam-card-wrap[data-category="가족일상"] .fam-card-icon { background: #fadbdb; }
+    .fam-card-wrap[data-category="가족일상"] .fam-tag { background: #fadbdb; color: #b6605b; }
+    .fam-card-wrap[data-category="가족일상"] .fam-card:hover { border-color: #e8a4a0; box-shadow: 0 12px 26px rgba(232,164,160,.24); }
 
-    .fam-card-wrap[data-category="기념일"] .fam-card-icon { background: #e8d9f0; }
-    .fam-card-wrap[data-category="기념일"] .fam-tag { background: #e8d9f0; color: #7a4ea0; }
-    .fam-card-wrap[data-category="기념일"] .fam-card:hover { border-color: #b48edc; box-shadow: 0 12px 26px rgba(180,142,220,.22); }
+    .fam-card-wrap[data-category="가족여행"] .fam-card-icon { background: #dde8f3; }
+    .fam-card-wrap[data-category="가족여행"] .fam-tag { background: #dde8f3; color: #5d8aac; }
+    .fam-card-wrap[data-category="가족여행"] .fam-card:hover { border-color: #a8c5e0; box-shadow: 0 12px 26px rgba(168,197,224,.24); }
 
-    .fam-card-wrap[data-category="콜렉션"] .fam-card-icon { background: #fbeec0; }
-    .fam-card-wrap[data-category="콜렉션"] .fam-tag { background: #fbeec0; color: #a07a1a; }
-    .fam-card-wrap[data-category="콜렉션"] .fam-card:hover { border-color: #f0c850; box-shadow: 0 12px 26px rgba(240,200,80,.22); }
+    .fam-card-wrap[data-category="기념일"] .fam-card-icon { background: #e6dceb; }
+    .fam-card-wrap[data-category="기념일"] .fam-tag { background: #e6dceb; color: #836a98; }
+    .fam-card-wrap[data-category="기념일"] .fam-card:hover { border-color: #c0aed0; box-shadow: 0 12px 26px rgba(192,174,208,.24); }
+
+    .fam-card-wrap[data-category="콜렉션"] .fam-card-icon { background: #fbecc7; }
+    .fam-card-wrap[data-category="콜렉션"] .fam-tag { background: #fbecc7; color: #a08534; }
+    .fam-card-wrap[data-category="콜렉션"] .fam-card:hover { border-color: #e8ce86; box-shadow: 0 12px 26px rgba(232,206,134,.24); }
 
     /* ─── 카드 그리드 ─── */
     .fam-card-grid {

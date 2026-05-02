@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>사이판 여행기 — DASOM's Blog</title>
   <link rel="stylesheet" href="../style.css" />
+  <link rel="stylesheet" href="../css/style.css" />
+  <script src="../js/guard.js"></script>
   <style>
 
     /* ── 배경 패턴 ── */
@@ -219,31 +221,31 @@
     }
 
   </style>
+  <style>
+    /* dasom css 의 header::before 4px 그라디언트 바 숨김 */
+    header::before { display: none !important; }
+  </style>
 </head>
-<body>
+<body class="theme-home">
 
-  <header>
-    <div class="header-inner">
-      <div class="header-text">
-        <div class="site-title">DASOM's Blog</div>
-        <div class="site-subtitle">다솜이의 공간입니다🐦</div>
-      </div>
+  <header class="app-header">
+    <div class="brand">
+      <img src="../11/dasom.png" alt="" />
+      <span>다솜이네</span>
     </div>
+    <button id="logout" class="logout-btn">나가기</button>
   </header>
 
-  <nav>
-    <ul>
-      <li><a href="../index.html">PARAPARA</a></li>
-      <li><a href="../family.html">Family</a></li>
-      <li><a href="../travel.html" class="active">Travel</a></li>
-      <li><a href="../collection.html">Collection</a></li>
-      <li><a href="../reviews.html">Reviews</a></li>
-    </ul>
+  <nav class="main-nav">
+    <a href="../home.html" class="nav-link active">다솜블로그</a>
+    <a href="../calendar.html" class="nav-link">달력</a>
+    <a href="../todo.html" class="nav-link">해야 할일</a>
+    <a href="../memo.html" class="nav-link">메모장</a>
   </nav>
 
   <div class="page-wrap">
 
-    <a href="../travel.html" class="post-back">목록으로</a>
+    <a href="../home.html" class="post-back">목록으로</a>
 
     <div class="post-header">
       <span class="post-category">Travel · 해외여행</span>
