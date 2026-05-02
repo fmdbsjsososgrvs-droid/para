@@ -73,7 +73,7 @@
 
     .fam-filter-grid {
       display: grid;
-      grid-template-columns: repeat(6, 1fr);
+      grid-template-columns: repeat(5, 1fr);
       gap: 10px;
       margin-bottom: 28px;
     }
@@ -114,6 +114,35 @@
     @media (max-width: 720px) {
       .fam-filter-grid { grid-template-columns: repeat(3, 1fr); }
     }
+
+    /* ─── 카테고리 색상 시스템 ─── */
+    /* 가족일상 = 초록 / 가족여행 = 파랑 / 기념일 = 보라 / 콜렉션 = 노랑 */
+    .fam-filter-btn[data-filter="가족일상"].active { background: #7eb88e; border-color: #4a8c5e; }
+    .fam-filter-btn[data-filter="가족여행"].active { background: #7eb0d4; border-color: #4a7ba0; }
+    .fam-filter-btn[data-filter="기념일"].active   { background: #b48edc; border-color: #7a4ea0; }
+    .fam-filter-btn[data-filter="콜렉션"].active   { background: #f0c850; border-color: #a07a1a; }
+
+    .fam-filter-btn[data-filter="가족일상"]:hover { border-color: #7eb88e; box-shadow: 0 6px 14px rgba(126,184,142,.22); }
+    .fam-filter-btn[data-filter="가족여행"]:hover { border-color: #7eb0d4; box-shadow: 0 6px 14px rgba(126,176,212,.22); }
+    .fam-filter-btn[data-filter="기념일"]:hover   { border-color: #b48edc; box-shadow: 0 6px 14px rgba(180,142,220,.22); }
+    .fam-filter-btn[data-filter="콜렉션"]:hover   { border-color: #f0c850; box-shadow: 0 6px 14px rgba(240,200,80,.22); }
+
+    /* 카드: 카테고리별 아이콘 배경 + 태그 색 */
+    .fam-card-wrap[data-category="가족일상"] .fam-card-icon { background: #d6ebda; }
+    .fam-card-wrap[data-category="가족일상"] .fam-tag { background: #d6ebda; color: #4a8c5e; }
+    .fam-card-wrap[data-category="가족일상"] .fam-card:hover { border-color: #7eb88e; box-shadow: 0 12px 26px rgba(126,184,142,.22); }
+
+    .fam-card-wrap[data-category="가족여행"] .fam-card-icon { background: #d6e6f5; }
+    .fam-card-wrap[data-category="가족여행"] .fam-tag { background: #d6e6f5; color: #4a7ba0; }
+    .fam-card-wrap[data-category="가족여행"] .fam-card:hover { border-color: #7eb0d4; box-shadow: 0 12px 26px rgba(126,176,212,.22); }
+
+    .fam-card-wrap[data-category="기념일"] .fam-card-icon { background: #e8d9f0; }
+    .fam-card-wrap[data-category="기념일"] .fam-tag { background: #e8d9f0; color: #7a4ea0; }
+    .fam-card-wrap[data-category="기념일"] .fam-card:hover { border-color: #b48edc; box-shadow: 0 12px 26px rgba(180,142,220,.22); }
+
+    .fam-card-wrap[data-category="콜렉션"] .fam-card-icon { background: #fbeec0; }
+    .fam-card-wrap[data-category="콜렉션"] .fam-tag { background: #fbeec0; color: #a07a1a; }
+    .fam-card-wrap[data-category="콜렉션"] .fam-card:hover { border-color: #f0c850; box-shadow: 0 12px 26px rgba(240,200,80,.22); }
 
     /* ─── 카드 그리드 ─── */
     .fam-card-grid {
@@ -231,7 +260,7 @@
   </header>
 
   <nav class="main-nav">
-    <a href="home.html" class="nav-link active">다솜이네</a>
+    <a href="home.html" class="nav-link active">다솜블로그</a>
     <a href="calendar.html" class="nav-link">달력</a>
     <a href="todo.html" class="nav-link">해야 할일</a>
     <a href="memo.html" class="nav-link">메모장</a>
@@ -243,9 +272,8 @@
     <section class="card">
       <div class="hero">
         <div class="hero-text">
-          <h2>우리 가족의<br/>따뜻한 공간 ♥</h2>
-          <p>오늘도 사랑이 가득한 하루,<br/>다솜이네에 오신 걸 환영해요.</p>
-          <p style="color:#a78ba0; font-size:14px;">아래에서 우리 가족의 이야기를 카테고리별로 살펴볼 수 있어요.</p>
+          <h2>다솜이의 블로그 ♥</h2>
+          <p>어서와! 여긴 다솜이의 공간이야!<br/>내 이야기를 들어볼래?</p>
         </div>
         <div class="hero-img">
           <img class="main" src="11/happy.png" alt="다솜이" />
@@ -256,21 +284,13 @@
 
     <!-- 가족 이야기 -->
     <section class="card" style="margin-top:24px;">
-      <h3 class="fam-section-title">🏠 우리 가족 이야기</h3>
+      <h3 class="fam-section-title">🏠 다솜이의 편안한 우리집</h3>
 
       <!-- 카테고리 필터 -->
       <div class="fam-filter-grid">
         <div class="fam-filter-btn active" data-filter="all" onclick="filterFamPosts(this, 'all')">
           <span class="fam-filter-icon">👨‍👩‍👧</span>
           <span class="fam-filter-label">전체</span>
-        </div>
-        <div class="fam-filter-btn" data-filter="엄마아빠" onclick="filterFamPosts(this, '엄마아빠')">
-          <span class="fam-filter-icon">💑</span>
-          <span class="fam-filter-label">엄마아빠</span>
-        </div>
-        <div class="fam-filter-btn" data-filter="다솜이" onclick="filterFamPosts(this, '다솜이')">
-          <span class="fam-filter-icon">👧</span>
-          <span class="fam-filter-label">다솜이</span>
         </div>
         <div class="fam-filter-btn" data-filter="가족일상" onclick="filterFamPosts(this, '가족일상')">
           <span class="fam-filter-icon">🏡</span>
@@ -283,6 +303,10 @@
         <div class="fam-filter-btn" data-filter="기념일" onclick="filterFamPosts(this, '기념일')">
           <span class="fam-filter-icon">🎂</span>
           <span class="fam-filter-label">기념일</span>
+        </div>
+        <div class="fam-filter-btn" data-filter="콜렉션" onclick="filterFamPosts(this, '콜렉션')">
+          <span class="fam-filter-icon">✨</span>
+          <span class="fam-filter-label">콜렉션</span>
         </div>
       </div>
 
@@ -323,14 +347,14 @@
           </a>
         </div>
 
-        <div class="fam-card-wrap" data-category="다솜이">
+        <div class="fam-card-wrap" data-category="가족일상">
           <a href="posts/daily-piano-market.html" class="fam-card-link">
             <div class="fam-card">
               <div class="fam-card-icon">🎹</div>
               <h3>피아노 학원 마켓데이!</h3>
               <p>어린이날 기념 마켓데이! 모은 도장으로 장난감 득템 🛍️ 내일부터 학교 6일 동안 안 가! 나이스!</p>
               <div class="fam-card-tags">
-                <span class="fam-tag">다솜이</span>
+                <span class="fam-tag">가족일상</span>
                 <span class="fam-tag">피아노학원</span>
                 <span class="fam-tag">마켓데이</span>
               </div>
@@ -339,14 +363,14 @@
           </a>
         </div>
 
-        <div class="fam-card-wrap" data-category="다솜이">
+        <div class="fam-card-wrap" data-category="가족일상">
           <a href="posts/daily-jjajang.html" class="fam-card-link">
             <div class="fam-card">
               <div class="fam-card-icon">🍜</div>
               <h3>오늘 급식은 짜장면!</h3>
               <p>짜장면이 너무 맛있어서 두 그릇 반! 닭다리 양념은 노잼... 내가 제일 좋아하는 건 닭강정과 하와이안 피자 🍕</p>
               <div class="fam-card-tags">
-                <span class="fam-tag">다솜이</span>
+                <span class="fam-tag">가족일상</span>
                 <span class="fam-tag">급식</span>
                 <span class="fam-tag">짜장면</span>
               </div>
@@ -434,7 +458,7 @@
           </a>
         </div>
 
-        <div class="fam-card-wrap" data-category="다솜이">
+        <div class="fam-card-wrap" data-category="가족일상">
           <a href="posts/parapara-character.html" class="fam-card-link">
             <div class="fam-card">
               <div class="fam-card-icon">🐦</div>
