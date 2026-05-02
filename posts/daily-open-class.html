@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>오늘의 일상 — DASOM's Blog</title>
+  <link rel="stylesheet" href="../style.css" />
+  <style>
+    @font-face {
+      font-family: '온글잎 룡룡';
+      src: local('온글잎 룡룡');
+    }
+
+    /* 일기장 전체 폰트 */
+    .diary-wrap {
+      font-family: '온글잎 룡룡', 'Noto Sans KR', sans-serif;
+    }
+
+    /* 날짜 스티커 */
+    .diary-date {
+      display: inline-block;
+      background: #fff9c4;
+      border: 2px dashed #f9c846;
+      border-radius: 12px;
+      padding: 8px 20px;
+      font-family: '온글잎 룡룡', 'Noto Sans KR', sans-serif;
+      font-size: 1rem;
+      color: #b58a00;
+      margin-bottom: 28px;
+      box-shadow: 2px 3px 0 #f9c84655;
+      letter-spacing: .05em;
+    }
+
+    /* 노트 배경 */
+    .diary-note {
+      background: #fffdf5;
+      border: 2.5px solid #e8dfc8;
+      border-radius: 18px;
+      padding: 36px 32px 36px 90px;
+      position: relative;
+      box-shadow: 4px 6px 0 #e8dfc8;
+      line-height: 2.4;
+      background-image:
+        repeating-linear-gradient(
+          transparent,
+          transparent 39px,
+          #dde8f5 39px,
+          #dde8f5 40px
+        );
+    }
+
+    /* 노트 왼쪽 줄 */
+    .diary-note::before {
+      content: '';
+      position: absolute;
+      left: 72px;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: #f4b8c1;
+      border-radius: 2px;
+    }
+
+    /* 노트 구멍 */
+    .diary-holes {
+      display: flex;
+      flex-direction: column;
+      gap: 40px;
+      position: absolute;
+      left: 18px;
+      top: 30px;
+    }
+    .diary-hole {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: #e8dfc8;
+      border: 2px solid #d4c8b0;
+      box-shadow: inset 1px 2px 3px rgba(0,0,0,.08);
+    }
+
+    /* 본문 텍스트 */
+    .diary-text {
+      font-family: '온글잎 룡룡', 'Noto Sans KR', sans-serif;
+      font-size: 1.18rem;
+      color: #3a3228;
+      padding-left: 0;
+    }
+
+    .diary-text p {
+      margin: 0 0 8px 0;
+      line-height: 2.4;
+    }
+
+    /* 이미지 영역 */
+    .diary-img-wrap {
+      text-align: center;
+      margin: 28px 0;
+    }
+    .diary-img-wrap img {
+      border-radius: 16px;
+      border: 3px dashed #f4b8c1;
+      padding: 8px;
+      background: #fff;
+      box-shadow: 3px 4px 0 #f4b8c155;
+      max-width: 240px;
+      width: 100%;
+    }
+    .diary-img-caption {
+      font-family: '온글잎 룡룡', 'Noto Sans KR', sans-serif;
+      font-size: .88rem;
+      color: #b58a00;
+      margin-top: 8px;
+    }
+
+    /* 강조 박스 */
+    .diary-callout {
+      background: #fff0f5;
+      border-left: 5px solid #f4b8c1;
+      border-radius: 0 12px 12px 0;
+      padding: 16px 20px;
+      margin: 20px 0;
+      font-family: '온글잎 룡룡', 'Noto Sans KR', sans-serif;
+      font-size: 1.08rem;
+      color: #c0516e;
+      line-height: 2;
+    }
+
+    /* 하트 마무리 */
+    .diary-ending {
+      text-align: right;
+      font-family: '온글잎 룡룡', 'Noto Sans KR', sans-serif;
+      font-size: 1.2rem;
+      color: #e05c7a;
+      padding-top: 8px;
+    }
+
+    /* 포스트 헤더 폰트 덮어쓰기 */
+    .post-title,
+    .post-category,
+    .post-meta-item {
+      font-family: '온글잎 룡룡', 'Noto Sans KR', sans-serif !important;
+    }
+    .post-title {
+      font-size: clamp(1.5rem, 3.5vw, 2.2rem) !important;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="header-inner">
+      <div class="header-text">
+        <div class="site-title">DASOM's Blog</div>
+        <div class="site-subtitle">다솜이의 공간입니다🐦</div>
+      </div>
+    </div>
+  </header>
+
+  <nav>
+    <ul>
+      <li><a href="../index.html">PARAPARA</a></li>
+      <li><a href="../family.html" class="active">Family</a></li>
+      <li><a href="../travel.html">Travel</a></li>
+      <li><a href="../collection.html">Collection</a></li>
+      <li><a href="../reviews.html">Reviews</a></li>
+    </ul>
+  </nav>
+
+  <div class="page-wrap">
+
+    <a href="../family.html" class="post-back">목록으로</a>
+
+    <div class="post-header">
+      <span class="post-category">Family · 가족일상</span>
+      <h1 class="post-title">오늘의 일상 🏫</h1>
+      <div class="post-meta">
+        <span class="post-meta-item">🐦 DASOM</span>
+        <span class="post-meta-divider"></span>
+        <span class="post-meta-item">2026. 04. 20</span>
+        <span class="post-meta-divider"></span>
+        <span class="post-meta-item">약 2분</span>
+      </div>
+    </div>
+
+    <!-- 일기 본문 -->
+    <div class="diary-wrap">
+
+      <!-- 날짜 스티커 -->
+      <div class="diary-date">📅 2026년 4월 20일 월요일</div>
+
+      <div class="diary-note">
+
+        <!-- 노트 구멍 -->
+        <div class="diary-holes">
+          <div class="diary-hole"></div>
+          <div class="diary-hole"></div>
+          <div class="diary-hole"></div>
+          <div class="diary-hole"></div>
+          <div class="diary-hole"></div>
+          <div class="diary-hole"></div>
+        </div>
+
+        <div class="diary-text">
+
+          <p>공개수업을 했어! 🏫</p>
+          <p>수업 내용은 다른 사람의 마음을 이해하는</p>
+          <p>동화를 영상으로 본 거야.</p>
+
+          <div class="diary-img-wrap">
+            <img src="../slip.png" alt="공개수업" />
+            <div class="diary-img-caption">✏️ 공개수업 날</div>
+          </div>
+
+          <p>나도 다른 사람의 마음을 볼 수 있다면</p>
+          <p>좋겠다고 느꼈어.</p>
+
+          <div class="diary-callout">
+            💛 엄마 아빠나 친한 사람들의 마음을 헤아릴 줄 아는 사람이 되고 싶어.
+          </div>
+
+          <p>아빠는 내가 잘 웃고</p>
+          <p>발표도 잘하는 모습이 좋았데 😊</p>
+
+          <p>엄마 아빠는 내 뒷모습을 보고 있었나봐.</p>
+
+          <div class="diary-img-wrap">
+            <img src="../back.png" alt="뒷모습" />
+            <div class="diary-img-caption">🌸 내 뒷모습</div>
+          </div>
+
+          <p>엄마 아빠랑 함께 있을 수 있어 좋았어! 🥰</p>
+
+          <div class="diary-img-wrap">
+            <img src="../smile.png" alt="스마일" />
+            <div class="diary-img-caption">😊 다솜이의 스마일</div>
+          </div>
+
+        </div>
+
+        <div class="diary-ending">
+          오늘도 행복했어 ❤️
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- 태그 -->
+    <div class="post-tags">
+      <div class="post-tags-label">Tags</div>
+      <span class="tag">공개수업</span>
+      <span class="tag">가족일상</span>
+      <span class="tag">다솜이</span>
+    </div>
+
+  </div>
+
+  <footer>
+    <div class="footer-deco">🐦 🌺 🐦 🌺</div>
+    © 2026 DASOM's Blog · All rights reserved
+  </footer>
+
+</body>
+</html>

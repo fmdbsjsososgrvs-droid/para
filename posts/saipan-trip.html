@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>사이판 여행기 — DASOM's Blog</title>
+  <link rel="stylesheet" href="../style.css" />
+  <style>
+
+    /* ── 배경 패턴 ── */
+    body {
+      background-color: #fff9fb;
+      background-image: radial-gradient(#ffd6e7 1.2px, transparent 1.2px),
+                        radial-gradient(#ffd6e7 1.2px, transparent 1.2px);
+      background-size: 28px 28px;
+      background-position: 0 0, 14px 14px;
+    }
+
+    /* ── 전체 래퍼 ── */
+    .travel-wrap {
+      font-family: '온글잎 룡룡', 'Noto Sans KR', sans-serif;
+    }
+
+    /* ── 날짜 스티커 ── */
+    .travel-date {
+      display: inline-block;
+      background: #fff;
+      border: 2.5px dashed #ffb3c6;
+      border-radius: 20px;
+      padding: 8px 22px;
+      font-size: .95rem;
+      font-weight: 700;
+      color: #e05c7a;
+      margin-bottom: 28px;
+      box-shadow: 3px 3px 0 #ffb3c6;
+      letter-spacing: .04em;
+    }
+
+    /* ── 섹션 타이틀 (스티커 느낌) ── */
+    .travel-section {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 1.05rem;
+      font-weight: 800;
+      color: #fff;
+      background: linear-gradient(135deg, #ff8fab, #ffb347);
+      border-radius: 30px;
+      padding: 8px 22px;
+      margin: 36px 0 18px;
+      box-shadow: 3px 3px 0 #ffb3c655;
+      letter-spacing: .02em;
+    }
+
+    /* ── 본문 텍스트 ── */
+    .travel-text {
+      font-size: 1.05rem;
+      color: #5a3e4b;
+      line-height: 2;
+      margin: 0 0 14px;
+    }
+
+    /* ── 폴라로이드 사진 그리드 ── */
+    .photo-grid {
+      display: grid;
+      gap: 16px;
+      margin: 20px 0;
+    }
+    .photo-grid.col-3 { grid-template-columns: repeat(3, 1fr); }
+    .photo-grid.col-2 { grid-template-columns: repeat(2, 1fr); }
+    .photo-grid.col-1 { grid-template-columns: 1fr; }
+
+    /* 폴라로이드 프레임 */
+    .photo-thumb {
+      position: relative;
+      cursor: zoom-in;
+      background: #fff;
+      padding: 8px 8px 28px;
+      border-radius: 4px;
+      box-shadow: 3px 4px 12px rgba(0,0,0,.13), 0 0 0 1px #ecdede;
+      transition: transform .22s cubic-bezier(.34,1.4,.64,1), box-shadow .22s;
+    }
+    /* 홀수 폴라로이드 살짝 기울기 */
+    .photo-grid.col-3 .photo-thumb:nth-child(odd)  { transform: rotate(-1.5deg); }
+    .photo-grid.col-3 .photo-thumb:nth-child(even) { transform: rotate(1.2deg); }
+    .photo-grid.col-2 .photo-thumb:nth-child(odd)  { transform: rotate(-1deg); }
+    .photo-grid.col-2 .photo-thumb:nth-child(even) { transform: rotate(1deg); }
+
+    .photo-thumb:hover {
+      transform: rotate(0deg) scale(1.06) translateY(-4px) !important;
+      box-shadow: 6px 10px 24px rgba(0,0,0,.2), 0 0 0 1px #ecdede;
+      z-index: 2;
+    }
+    .photo-thumb .thumb-inner {
+      overflow: hidden;
+      border-radius: 2px;
+      aspect-ratio: 4/3;
+    }
+    .photo-thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform .3s;
+    }
+    .photo-thumb:hover img { transform: scale(1.05); }
+
+    /* 폴라로이드 하단 캡션 영역 */
+    .photo-thumb .zoom-icon {
+      position: absolute;
+      bottom: 5px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: .7rem;
+      color: #cbb;
+      letter-spacing: .05em;
+    }
+
+    /* ── 라이트박스 ── */
+    .lightbox {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(60,20,30,.9);
+      z-index: 9999;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .lightbox.open { display: flex; }
+    .lightbox img {
+      max-width: 92vw;
+      max-height: 88vh;
+      object-fit: contain;
+      border-radius: 6px;
+      box-shadow: 0 10px 40px rgba(0,0,0,.6);
+    }
+    .lightbox-close {
+      position: fixed;
+      top: 18px;
+      right: 22px;
+      color: #fff;
+      font-size: 1.4rem;
+      cursor: pointer;
+      background: #ff8fab;
+      border: none;
+      border-radius: 50%;
+      width: 42px;
+      height: 42px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .lightbox-close:hover { background: #ff6b8a; }
+
+    .lightbox-prev,
+    .lightbox-next {
+      position: fixed;
+      top: 50%;
+      transform: translateY(-50%);
+      background: #ff8fab;
+      border: none;
+      color: #fff;
+      font-size: 1.6rem;
+      width: 46px;
+      height: 46px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background .2s;
+    }
+    .lightbox-prev:hover,
+    .lightbox-next:hover { background: #ff6b8a; }
+    .lightbox-prev { left: 16px; }
+    .lightbox-next { right: 16px; }
+
+    /* ── 동영상 ── */
+    .travel-video {
+      width: 100%;
+      border-radius: 18px;
+      margin: 16px 0;
+      box-shadow: 4px 5px 0 #ffb3c6, 0 8px 20px rgba(0,0,0,.1);
+      max-height: 480px;
+      border: 3px solid #fff;
+      outline: 2px dashed #ffb3c6;
+    }
+
+    /* ── 말풍선 callout ── */
+    .travel-callout {
+      position: relative;
+      background: #fff;
+      border: 2.5px solid #ffb3c6;
+      border-radius: 20px;
+      padding: 16px 22px;
+      margin: 20px 0;
+      font-size: 1.05rem;
+      color: #c0516e;
+      font-weight: 700;
+      line-height: 1.9;
+      box-shadow: 3px 3px 0 #ffb3c655;
+    }
+    .travel-callout::before {
+      content: '✨';
+      margin-right: 6px;
+    }
+
+    /* 포스트 타이틀 */
+    .post-title {
+      font-size: clamp(1.5rem, 3.5vw, 2.2rem) !important;
+    }
+
+    /* 반응형 */
+    @media (max-width: 480px) {
+      .photo-grid.col-3 { grid-template-columns: repeat(2, 1fr); }
+      .photo-grid.col-3 .photo-thumb:nth-child(odd),
+      .photo-grid.col-3 .photo-thumb:nth-child(even) { transform: none; }
+    }
+
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="header-inner">
+      <div class="header-text">
+        <div class="site-title">DASOM's Blog</div>
+        <div class="site-subtitle">다솜이의 공간입니다🐦</div>
+      </div>
+    </div>
+  </header>
+
+  <nav>
+    <ul>
+      <li><a href="../index.html">PARAPARA</a></li>
+      <li><a href="../family.html">Family</a></li>
+      <li><a href="../travel.html" class="active">Travel</a></li>
+      <li><a href="../collection.html">Collection</a></li>
+      <li><a href="../reviews.html">Reviews</a></li>
+    </ul>
+  </nav>
+
+  <div class="page-wrap">
+
+    <a href="../travel.html" class="post-back">목록으로</a>
+
+    <div class="post-header">
+      <span class="post-category">Travel · 해외여행</span>
+      <h1 class="post-title">사이판 여행기 🌴</h1>
+      <div class="post-meta">
+        <span class="post-meta-item">🐦 DASOM</span>
+        <span class="post-meta-divider"></span>
+        <span class="post-meta-item">2026. 04. 22</span>
+        <span class="post-meta-divider"></span>
+        <span class="post-meta-item">약 3분</span>
+      </div>
+    </div>
+
+    <div class="travel-wrap">
+
+      <div class="travel-date">✈️ 2026년 4월 22일</div>
+
+      <p class="travel-text">작년 2025년에 사이판 갔었던 이야기야! 🌊</p>
+
+      <!-- 호텔 -->
+      <div class="travel-section">🏨 호텔</div>
+      <p class="travel-text">호텔은 깔끔하고 좋았어. 호텔 주변에서 노는 것도, 맛있는 주스도 마셨지. 수영장도 있었어. 재밌는 미끄럼틀 있어서 다섯 번은 탄 거 같아! 호텔 만족스러워. 😊</p>
+      <div class="photo-grid col-3">
+        <div class="photo-thumb" onclick="openLightbox(this)"><div class="thumb-inner"><img src="../saipan/11.jpg" alt="호텔 1"/></div><span class="zoom-icon">click to zoom</span></div>
+        <div class="photo-thumb" onclick="openLightbox(this)"><div class="thumb-inner"><img src="../saipan/12.jpg" alt="호텔 2"/></div><span class="zoom-icon">click to zoom</span></div>
+        <div class="photo-thumb" onclick="openLightbox(this)"><div class="thumb-inner"><img src="../saipan/13.jpg" alt="호텔 3"/></div><span class="zoom-icon">click to zoom</span></div>
+      </div>
+
+      <!-- 마나가하 섬 -->
+      <div class="travel-section">🏝️ 마나가하 섬</div>
+      <p class="travel-text">그리고 배 타고 마나가하 섬에 갔어. 페러글라이드도 했어! 페러글라이드는 하늘을 나는 기분이라 스릴 있었어. 🪂</p>
+      <p class="travel-text">마나가하섬에선 모래성 만들고, 수영 많이 하고, 물안경 쓰고 물고기 만져봤어. 물고기가 엄청 많더라. 물이 너무 맑아서 물고기가 무척 잘 보였었지. 🐠</p>
+      <p class="travel-text">마나가하 섬이야 여기서 우린...</p>
+      <div class="photo-grid col-3">
+        <div class="photo-thumb" onclick="openLightbox(this)"><div class="thumb-inner"><img src="../saipan/15.jpg" alt="마나가하 1"/></div><span class="zoom-icon">click to zoom</span></div>
+        <div class="photo-thumb" onclick="openLightbox(this)"><div class="thumb-inner"><img src="../saipan/16.jpg" alt="마나가하 2"/></div><span class="zoom-icon">click to zoom</span></div>
+        <div class="photo-thumb" onclick="openLightbox(this)"><div class="thumb-inner"><img src="../saipan/14.jpg" alt="마나가하 3"/></div><span class="zoom-icon">click to zoom</span></div>
+      </div>
+
+      <!-- 밥 -->
+      <div class="travel-section">🍽️ 밥</div>
+      <div class="photo-grid col-1">
+        <div class="photo-thumb" onclick="openLightbox(this)"><div class="thumb-inner" style="aspect-ratio:16/9;"><img src="../saipan/17.jpg" alt="식사"/></div><span class="zoom-icon">click to zoom</span></div>
+      </div>
+
+      <!-- 춤추는 언니들 -->
+      <div class="travel-section">💃 춤을 잘 추는 언니들</div>
+      <p class="travel-text">밥도 맛있고, 춤추는 언니들이 멋져 보였어. 나도 저렇게 춤추고 싶어! 💃</p>
+      <video class="travel-video" controls playsinline>
+        <source src="../saipan/IMG_2112.mp4" type="video/mp4" />
+        동영상을 재생할 수 없습니다.
+      </video>
+
+      <!-- 노을 -->
+      <div class="travel-section">🌅 노을</div>
+      <div class="travel-callout">노을이 멋지지? 🌇</div>
+      <div class="photo-grid col-3">
+        <div class="photo-thumb" onclick="openLightbox(this)"><div class="thumb-inner"><img src="../saipan/18r.jpg" alt="노을 1"/></div><span class="zoom-icon">click to zoom</span></div>
+        <div class="photo-thumb" onclick="openLightbox(this)"><div class="thumb-inner"><img src="../saipan/19r.jpg" alt="노을 2"/></div><span class="zoom-icon">click to zoom</span></div>
+        <div class="photo-thumb" onclick="openLightbox(this)"><div class="thumb-inner"><img src="../saipan/20.jpg" alt="노을 3"/></div><span class="zoom-icon">click to zoom</span></div>
+      </div>
+
+      <!-- 물속 -->
+      <div class="travel-section">🤿 물속</div>
+      <p class="travel-text">물속에서 이런 것도 찍었어.</p>
+      <p class="travel-text">근처 바다에서 엄마가 해삼 잡아줬어, 블랙해삼~ 🖤 소라게도 주워서 놀았어. 다솜이는 주변 바다가 젤 좋았어! 🌊</p>
+      <div class="photo-grid col-1">
+        <div class="photo-thumb" onclick="openLightbox(this)"><div class="thumb-inner" style="aspect-ratio:16/9;"><img src="../saipan/21.jpg" alt="물속"/></div><span class="zoom-icon">click to zoom</span></div>
+      </div>
+
+      <!-- 경치 -->
+      <div class="travel-section">🌴 경치</div>
+      <div class="travel-callout">경치가 정말 좋지? 🌊</div>
+      <div class="photo-grid col-2">
+        <div class="photo-thumb" onclick="openLightbox(this)"><div class="thumb-inner"><img src="../saipan/22r.jpg" alt="경치 1"/></div><span class="zoom-icon">click to zoom</span></div>
+        <div class="photo-thumb" onclick="openLightbox(this)"><div class="thumb-inner"><img src="../saipan/23.jpg" alt="경치 2"/></div><span class="zoom-icon">click to zoom</span></div>
+      </div>
+
+      <!-- 기념품 -->
+      <div class="travel-section">🎁 기념품</div>
+      <p class="travel-text">기념품도 이것저것 사왔어.</p>
+      <div class="photo-grid col-2">
+        <div class="photo-thumb" onclick="openLightbox(this)"><div class="thumb-inner"><img src="../saipan/24.jpg" alt="기념품 1"/></div><span class="zoom-icon">click to zoom</span></div>
+        <div class="photo-thumb" onclick="openLightbox(this)"><div class="thumb-inner"><img src="../saipan/25.jpg" alt="기념품 2"/></div><span class="zoom-icon">click to zoom</span></div>
+      </div>
+
+    </div>
+
+    <!-- 태그 -->
+    <div class="post-tags">
+      <div class="post-tags-label">Tags</div>
+      <span class="tag">사이판</span>
+      <span class="tag">해외여행</span>
+      <span class="tag">마나가하섬</span>
+      <span class="tag">2025</span>
+    </div>
+
+  </div>
+
+  <footer>
+    <div class="footer-deco">✈️ 🌴 🌊 🌅</div>
+    © 2026 DASOM's Blog · All rights reserved
+  </footer>
+
+  <!-- ── 라이트박스 오버레이 ── -->
+  <div class="lightbox" id="lightbox" onclick="closeLightboxOutside(event)">
+    <button class="lightbox-close" onclick="closeLightbox()">✕</button>
+    <button class="lightbox-prev" onclick="moveLightbox(-1)">‹</button>
+    <img id="lightbox-img" src="" alt="" />
+    <button class="lightbox-next" onclick="moveLightbox(1)">›</button>
+  </div>
+
+  <script>
+    // 전체 썸네일 목록
+    const thumbs = Array.from(document.querySelectorAll('.photo-thumb'));
+    let currentIndex = 0;
+
+    function openLightbox(el) {
+      currentIndex = thumbs.indexOf(el);
+      showImage(currentIndex);
+      document.getElementById('lightbox').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function showImage(idx) {
+      const img = thumbs[idx].querySelector('img');
+      document.getElementById('lightbox-img').src = img.src;
+      document.getElementById('lightbox-img').alt = img.alt;
+    }
+
+    function closeLightbox() {
+      document.getElementById('lightbox').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    function closeLightboxOutside(e) {
+      if (e.target === document.getElementById('lightbox')) closeLightbox();
+    }
+
+    function moveLightbox(dir) {
+      currentIndex = (currentIndex + dir + thumbs.length) % thumbs.length;
+      showImage(currentIndex);
+    }
+
+    // 키보드 지원
+    document.addEventListener('keydown', e => {
+      if (!document.getElementById('lightbox').classList.contains('open')) return;
+      if (e.key === 'ArrowLeft')  moveLightbox(-1);
+      if (e.key === 'ArrowRight') moveLightbox(1);
+      if (e.key === 'Escape')     closeLightbox();
+    });
+  </script>
+
+</body>
+</html>

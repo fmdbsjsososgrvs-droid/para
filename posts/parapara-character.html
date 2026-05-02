@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>다솜이의 캐릭터 - 파라파라! — DASOM's Blog</title>
+  <link rel="stylesheet" href="../style.css" />
+  <style>
+    @font-face {
+      font-family: '온글잎 룡룡';
+      src: local('온글잎 룡룡');
+    }
+
+    /* 일기장 전체 폰트 */
+    .diary-wrap {
+      font-family: '온글잎 룡룡', 'Noto Sans KR', sans-serif;
+    }
+
+    /* 날짜 스티커 */
+    .diary-date {
+      display: inline-block;
+      background: #fff9c4;
+      border: 2px dashed #f9c846;
+      border-radius: 12px;
+      padding: 8px 20px;
+      font-family: '온글잎 룡룡', 'Noto Sans KR', sans-serif;
+      font-size: 1rem;
+      color: #b58a00;
+      margin-bottom: 28px;
+      box-shadow: 2px 3px 0 #f9c84655;
+      letter-spacing: .05em;
+    }
+
+    /* 노트 배경 */
+    .diary-note {
+      background: #fffdf5;
+      border: 2.5px solid #e8dfc8;
+      border-radius: 18px;
+      padding: 36px 32px 36px 90px;
+      position: relative;
+      box-shadow: 4px 6px 0 #e8dfc8;
+      line-height: 2.4;
+      background-image:
+        repeating-linear-gradient(
+          transparent,
+          transparent 39px,
+          #dde8f5 39px,
+          #dde8f5 40px
+        );
+    }
+
+    /* 노트 왼쪽 줄 */
+    .diary-note::before {
+      content: '';
+      position: absolute;
+      left: 72px;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: #f4b8c1;
+      border-radius: 2px;
+    }
+
+    /* 노트 구멍 */
+    .diary-holes {
+      display: flex;
+      flex-direction: column;
+      gap: 40px;
+      position: absolute;
+      left: 18px;
+      top: 30px;
+    }
+    .diary-hole {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: #e8dfc8;
+      border: 2px solid #d4c8b0;
+      box-shadow: inset 1px 2px 3px rgba(0,0,0,.08);
+    }
+
+    /* 본문 텍스트 */
+    .diary-text {
+      font-family: '온글잎 룡룡', 'Noto Sans KR', sans-serif;
+      font-size: 1.18rem;
+      color: #3a3228;
+      padding-left: 0;
+    }
+
+    .diary-text p {
+      margin: 0 0 8px 0;
+      line-height: 2.4;
+    }
+
+    /* 이미지 영역 */
+    .diary-img-wrap {
+      text-align: center;
+      margin: 28px 0;
+      padding-left: 0;
+    }
+    .diary-img-wrap img {
+      border-radius: 16px;
+      border: 3px dashed #f4b8c1;
+      padding: 8px;
+      background: #fff;
+      box-shadow: 3px 4px 0 #f4b8c155;
+      max-width: 220px;
+      width: 100%;
+    }
+    .diary-img-caption {
+      font-family: '온글잎 룡룡', 'Noto Sans KR', sans-serif;
+      font-size: .88rem;
+      color: #b58a00;
+      margin-top: 8px;
+    }
+
+    /* 이미지 두 개 나란히 */
+    .diary-img-row {
+      display: flex;
+      gap: 20px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin: 28px 0;
+      padding-left: 0;
+    }
+    .diary-img-row .diary-img-item {
+      text-align: center;
+    }
+    .diary-img-row img {
+      border-radius: 16px;
+      border: 3px dashed #f4b8c1;
+      padding: 8px;
+      background: #fff;
+      box-shadow: 3px 4px 0 #f4b8c155;
+      max-width: 160px;
+      width: 100%;
+    }
+
+    /* 강조 박스 */
+    .diary-callout {
+      background: #fff0f5;
+      border-left: 5px solid #f4b8c1;
+      border-radius: 0 12px 12px 0;
+      padding: 16px 20px;
+      margin: 20px 0 20px 0;
+      font-family: '온글잎 룡룡', 'Noto Sans KR', sans-serif;
+      font-size: 1.08rem;
+      color: #c0516e;
+      line-height: 2;
+    }
+
+    /* 하트 마무리 */
+    .diary-ending {
+      text-align: right;
+      font-family: '온글잎 룡룡', 'Noto Sans KR', sans-serif;
+      font-size: 1.2rem;
+      color: #e05c7a;
+      padding-top: 8px;
+    }
+
+    /* 포스트 헤더 폰트 덮어쓰기 */
+    .post-title,
+    .post-category,
+    .post-meta-item {
+      font-family: '온글잎 룡룡', 'Noto Sans KR', sans-serif !important;
+    }
+    .post-title {
+      font-size: clamp(1.5rem, 3.5vw, 2.2rem) !important;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="header-inner">
+      <div class="header-text">
+        <div class="site-title">DASOM's Blog</div>
+        <div class="site-subtitle">다솜이의 공간입니다🐦</div>
+      </div>
+    </div>
+  </header>
+
+  <nav>
+    <ul>
+      <li><a href="../index.html">PARAPARA</a></li>
+      <li><a href="../family.html" class="active">Family</a></li>
+      <li><a href="../travel.html">Travel</a></li>
+      <li><a href="../collection.html">Collection</a></li>
+      <li><a href="../reviews.html">Reviews</a></li>
+    </ul>
+  </nav>
+
+  <div class="page-wrap">
+
+    <a href="../family.html" class="post-back">목록으로</a>
+
+    <div class="post-header">
+      <span class="post-category">Family · 딸</span>
+      <h1 class="post-title">다솜이의 캐릭터 - 파라파라! 🐦</h1>
+      <div class="post-meta">
+        <span class="post-meta-item">🐦 DASOM</span>
+        <span class="post-meta-divider"></span>
+        <span class="post-meta-item">2026. 04. 21</span>
+        <span class="post-meta-divider"></span>
+        <span class="post-meta-item">약 1분</span>
+      </div>
+    </div>
+
+    <!-- 일기 본문 -->
+    <div class="diary-wrap">
+
+      <!-- 날짜 스티커 -->
+      <div class="diary-date">📅 2026년 4월 21일 화요일</div>
+
+      <div class="diary-note">
+
+        <!-- 노트 구멍 -->
+        <div class="diary-holes">
+          <div class="diary-hole"></div>
+          <div class="diary-hole"></div>
+          <div class="diary-hole"></div>
+          <div class="diary-hole"></div>
+          <div class="diary-hole"></div>
+        </div>
+
+        <div class="diary-text">
+
+          <p>이 귀여운 아이는,</p>
+          <p>내가 좋아하는 <strong>극락조 (파라다이스 버드)</strong>를 컨셉으로 만든 캐릭터야! 🌺</p>
+
+          <!-- 이미지 두 개 나란히 -->
+          <div class="diary-img-row">
+            <div class="diary-img-item">
+              <img src="../dasom.png" alt="파라파라 캐릭터" />
+              <div class="diary-img-caption">✏️ 파라파라</div>
+            </div>
+            <div class="diary-img-item">
+              <img src="../smile.png" alt="스마일" />
+              <div class="diary-img-caption">😊 다솜이의 스마일</div>
+            </div>
+          </div>
+
+          <p>이름은 <strong>파라파라</strong> 라고 해.</p>
+          <p>인터넷 상에서 나의 감정과 생각을 표현해주는</p>
+          <p>다솜이의 <strong>부캐</strong>야 🎭</p>
+
+          <div class="diary-callout">
+            🌟 너무 귀엽지?
+          </div>
+
+        </div>
+
+        <div class="diary-ending">
+          잘 부탁해 파라파라 ❤️
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- 태그 -->
+    <div class="post-tags">
+      <div class="post-tags-label">Tags</div>
+      <span class="tag">파라파라</span>
+      <span class="tag">캐릭터</span>
+      <span class="tag">극락조</span>
+      <span class="tag">다솜이</span>
+    </div>
+
+  </div>
+
+  <footer>
+    <div class="footer-deco">🐦 🌺 🐦 🌺</div>
+    © 2026 DASOM's Blog · All rights reserved
+  </footer>
+
+</body>
+</html>

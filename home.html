@@ -11,6 +11,7 @@
   <link rel="stylesheet" href="css/style.css" />
   <script src="js/guard.js"></script>
   <style>
+    /* ─── Hero (인사말) ─── */
     .hero {
       display: grid;
       grid-template-columns: 1.2fr 1fr;
@@ -57,6 +58,166 @@
       .hero-img img.main { width: 180px; }
       .hero-img img.side { width: 80px; right: 20%; }
     }
+
+    /* ─── 카테고리 필터 ─── */
+    .fam-section-title {
+      font-family: 'Gaegu', 'Apple SD Gothic Neo', '돋움', sans-serif;
+      font-size: 26px;
+      font-weight: 700;
+      color: var(--accent-deep);
+      margin: 0 0 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .fam-filter-grid {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 10px;
+      margin-bottom: 28px;
+    }
+    .fam-filter-btn {
+      background: rgba(255, 255, 255, 0.7);
+      border: 2px solid var(--accent-soft);
+      border-radius: 18px;
+      padding: 14px 8px;
+      text-align: center;
+      cursor: pointer;
+      transition: all .2s;
+      font-family: inherit;
+      color: #8a6f7a;
+    }
+    .fam-filter-btn:hover {
+      background: #fff;
+      border-color: var(--accent);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 14px rgba(255, 158, 183, 0.2);
+    }
+    .fam-filter-btn.active {
+      background: var(--accent);
+      border-color: var(--accent-deep);
+      color: #fff;
+      box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+    }
+    .fam-filter-icon {
+      font-size: 1.6rem;
+      display: block;
+      margin-bottom: 6px;
+    }
+    .fam-filter-label {
+      font-family: 'Gaegu', 'Apple SD Gothic Neo', '돋움', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: .02em;
+    }
+    @media (max-width: 720px) {
+      .fam-filter-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+
+    /* ─── 카드 그리드 ─── */
+    .fam-card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 18px;
+      align-items: stretch;
+    }
+
+    .fam-card-link {
+      text-decoration: none;
+      color: inherit;
+      display: flex;
+      height: 100%;
+    }
+    .fam-card-wrap { display: flex; flex-direction: column; width: 100%; }
+    .fam-card-wrap.hidden { display: none; }
+
+    .fam-card {
+      background: rgba(255, 255, 255, 0.85);
+      border: 2px solid var(--accent-soft);
+      border-radius: 22px;
+      padding: 22px 22px 20px;
+      transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.04);
+    }
+    .fam-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 26px rgba(255, 158, 183, 0.22);
+      border-color: var(--accent);
+    }
+
+    .fam-card-icon {
+      font-size: 1.6rem;
+      width: 48px;
+      height: 48px;
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 14px;
+      background: var(--accent-soft);
+      flex-shrink: 0;
+    }
+
+    .fam-card h3 {
+      font-family: 'Gaegu', 'Apple SD Gothic Neo', '돋움', sans-serif;
+      font-size: 19px;
+      font-weight: 700;
+      color: var(--accent-deep);
+      margin: 0 0 8px;
+      line-height: 1.3;
+    }
+
+    .fam-card p {
+      font-size: 14px;
+      color: #6b4a55;
+      line-height: 1.7;
+      margin: 0;
+      flex: 1;
+    }
+
+    .fam-card-tags {
+      margin-top: 12px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .fam-tag {
+      display: inline-block;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 999px;
+      background: var(--accent-soft);
+      color: var(--accent-deep);
+      letter-spacing: .02em;
+    }
+
+    .fam-card-date {
+      font-family: 'Gaegu', 'Apple SD Gothic Neo', '돋움', sans-serif;
+      font-size: 13px;
+      color: #b39aa6;
+      margin-top: 14px;
+      letter-spacing: .04em;
+    }
+
+    .fam-filter-empty {
+      display: none;
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 48px 24px;
+      color: #a48b96;
+    }
+    .fam-filter-empty .fam-empty-icon {
+      font-size: 2.4rem;
+      display: block;
+      margin-bottom: 12px;
+    }
   </style>
 </head>
 <body class="theme-home">
@@ -77,12 +238,14 @@
   </nav>
 
   <main class="page">
+
+    <!-- 인사말 -->
     <section class="card">
       <div class="hero">
         <div class="hero-text">
           <h2>우리 가족의<br/>따뜻한 공간 ♥</h2>
           <p>오늘도 사랑이 가득한 하루,<br/>다솜이네에 오신 걸 환영해요.</p>
-          <p style="color:#a78ba0; font-size:14px;">위에서 달력 · 해야 할일 · 메모장으로 이동할 수 있어요.</p>
+          <p style="color:#a78ba0; font-size:14px;">아래에서 우리 가족의 이야기를 카테고리별로 살펴볼 수 있어요.</p>
         </div>
         <div class="hero-img">
           <img class="main" src="11/happy.png" alt="다솜이" />
@@ -90,8 +253,238 @@
         </div>
       </div>
     </section>
+
+    <!-- 가족 이야기 -->
+    <section class="card" style="margin-top:24px;">
+      <h3 class="fam-section-title">🏠 우리 가족 이야기</h3>
+
+      <!-- 카테고리 필터 -->
+      <div class="fam-filter-grid">
+        <div class="fam-filter-btn active" data-filter="all" onclick="filterFamPosts(this, 'all')">
+          <span class="fam-filter-icon">👨‍👩‍👧</span>
+          <span class="fam-filter-label">전체</span>
+        </div>
+        <div class="fam-filter-btn" data-filter="엄마아빠" onclick="filterFamPosts(this, '엄마아빠')">
+          <span class="fam-filter-icon">💑</span>
+          <span class="fam-filter-label">엄마아빠</span>
+        </div>
+        <div class="fam-filter-btn" data-filter="다솜이" onclick="filterFamPosts(this, '다솜이')">
+          <span class="fam-filter-icon">👧</span>
+          <span class="fam-filter-label">다솜이</span>
+        </div>
+        <div class="fam-filter-btn" data-filter="가족일상" onclick="filterFamPosts(this, '가족일상')">
+          <span class="fam-filter-icon">🏡</span>
+          <span class="fam-filter-label">가족일상</span>
+        </div>
+        <div class="fam-filter-btn" data-filter="가족여행" onclick="filterFamPosts(this, '가족여행')">
+          <span class="fam-filter-icon">🚗</span>
+          <span class="fam-filter-label">가족여행</span>
+        </div>
+        <div class="fam-filter-btn" data-filter="기념일" onclick="filterFamPosts(this, '기념일')">
+          <span class="fam-filter-icon">🎂</span>
+          <span class="fam-filter-label">기념일</span>
+        </div>
+      </div>
+
+      <h3 class="fam-section-title">📝 포스트</h3>
+
+      <!-- 카드 그리드 -->
+      <div class="fam-card-grid" id="fam-post-grid">
+
+        <div class="fam-card-wrap" data-category="가족일상">
+          <a href="posts/daily-hangang.html" class="fam-card-link">
+            <div class="fam-card">
+              <div class="fam-card-icon">💦</div>
+              <h3>한강중앙공원 금빛수로!</h3>
+              <p>금빛수로에서 물놀이! 또 옷이 젖었지 뭐야 😅 발바닥은 살짝 긁혔지만 재밌었어. 순돌이 산책도 제대로 🐶</p>
+              <div class="fam-card-tags">
+                <span class="fam-tag">가족일상</span>
+                <span class="fam-tag">한강중앙공원</span>
+                <span class="fam-tag">물놀이</span>
+              </div>
+              <div class="fam-card-date">2026. 05. 02</div>
+            </div>
+          </a>
+        </div>
+
+        <div class="fam-card-wrap" data-category="가족일상">
+          <a href="posts/daily-lottemall.html" class="fam-card-link">
+            <div class="fam-card">
+              <div class="fam-card-icon">🎬</div>
+              <h3>롯데몰에서 영화 + 놀이방!</h3>
+              <p>놀이방 경기 심판 데뷔 📣 이리저리 뛰며 중계까지! 영화는 슈퍼 마리오 갤럭시 🎮 둘 다 재밌었어!</p>
+              <div class="fam-card-tags">
+                <span class="fam-tag">가족일상</span>
+                <span class="fam-tag">롯데몰</span>
+                <span class="fam-tag">슈퍼마리오</span>
+              </div>
+              <div class="fam-card-date">2026. 05. 01</div>
+            </div>
+          </a>
+        </div>
+
+        <div class="fam-card-wrap" data-category="다솜이">
+          <a href="posts/daily-piano-market.html" class="fam-card-link">
+            <div class="fam-card">
+              <div class="fam-card-icon">🎹</div>
+              <h3>피아노 학원 마켓데이!</h3>
+              <p>어린이날 기념 마켓데이! 모은 도장으로 장난감 득템 🛍️ 내일부터 학교 6일 동안 안 가! 나이스!</p>
+              <div class="fam-card-tags">
+                <span class="fam-tag">다솜이</span>
+                <span class="fam-tag">피아노학원</span>
+                <span class="fam-tag">마켓데이</span>
+              </div>
+              <div class="fam-card-date">2026. 04. 30</div>
+            </div>
+          </a>
+        </div>
+
+        <div class="fam-card-wrap" data-category="다솜이">
+          <a href="posts/daily-jjajang.html" class="fam-card-link">
+            <div class="fam-card">
+              <div class="fam-card-icon">🍜</div>
+              <h3>오늘 급식은 짜장면!</h3>
+              <p>짜장면이 너무 맛있어서 두 그릇 반! 닭다리 양념은 노잼... 내가 제일 좋아하는 건 닭강정과 하와이안 피자 🍕</p>
+              <div class="fam-card-tags">
+                <span class="fam-tag">다솜이</span>
+                <span class="fam-tag">급식</span>
+                <span class="fam-tag">짜장면</span>
+              </div>
+              <div class="fam-card-date">2026. 04. 29</div>
+            </div>
+          </a>
+        </div>
+
+        <div class="fam-card-wrap" data-category="가족여행">
+          <a href="posts/review-seoulland.html" class="fam-card-link">
+            <div class="fam-card">
+              <div class="fam-card-icon">🎢</div>
+              <h3>서울랜드에 다녀왔어!</h3>
+              <p>블랙홀 롤러코스터 맨 뒤 탑승! 다트 2발 명중에 빙글빙글 혼자 탑승 성공 🌀 총점 만점!</p>
+              <div class="fam-card-tags">
+                <span class="fam-tag">가족여행</span>
+                <span class="fam-tag">서울랜드</span>
+                <span class="fam-tag">가족나들이</span>
+              </div>
+              <div class="fam-card-date">2026. 04. 24</div>
+            </div>
+          </a>
+        </div>
+
+        <div class="fam-card-wrap" data-category="가족일상">
+          <a href="posts/daily-soonddol.html" class="fam-card-link">
+            <div class="fam-card">
+              <div class="fam-card-icon">🐶</div>
+              <h3>우리집 강아지 순돌이</h3>
+              <p>순돌이 엉덩이에 혹이 났는데... 하루 만에 씻은 듯이 나았어. 꾀병?! 😂</p>
+              <div class="fam-card-tags">
+                <span class="fam-tag">순돌이</span>
+                <span class="fam-tag">강아지</span>
+                <span class="fam-tag">가족일상</span>
+              </div>
+              <div class="fam-card-date">2026. 04. 24</div>
+            </div>
+          </a>
+        </div>
+
+        <div class="fam-card-wrap" data-category="가족일상">
+          <a href="posts/daily-park-bike.html" class="fam-card-link">
+            <div class="fam-card">
+              <div class="fam-card-icon">🚴</div>
+              <h3>공원서 소금쟁이 잡았어!</h3>
+              <p>소금쟁이 15마리 대작전! 김밥에 순대까지, 아빠랑 자전거 여행 + 루핑루이 득템 🎲</p>
+              <div class="fam-card-tags">
+                <span class="fam-tag">가족일상</span>
+                <span class="fam-tag">소금쟁이</span>
+                <span class="fam-tag">자전거여행</span>
+              </div>
+              <div class="fam-card-date">2026. 04. 22</div>
+            </div>
+          </a>
+        </div>
+
+        <div class="fam-card-wrap" data-category="가족일상">
+          <a href="posts/daily-grandparents.html" class="fam-card-link">
+            <div class="fam-card">
+              <div class="fam-card-icon">👴</div>
+              <h3>이모 할머니 할아버지를 뵈었다</h3>
+              <p>처음엔 노잼이었지만... 10만원 받고 기분 업! 스퀴시도 샀어 히히 😄</p>
+              <div class="fam-card-tags">
+                <span class="fam-tag">가족일상</span>
+                <span class="fam-tag">할머니할아버지</span>
+                <span class="fam-tag">스퀴시</span>
+              </div>
+              <div class="fam-card-date">2026. 04. 23</div>
+            </div>
+          </a>
+        </div>
+
+        <div class="fam-card-wrap" data-category="가족일상">
+          <a href="posts/daily-open-class.html" class="fam-card-link">
+            <div class="fam-card">
+              <div class="fam-card-icon">🏫</div>
+              <h3>오늘의 일상</h3>
+              <p>공개수업 날, 다른 사람의 마음을 헤아리는 법을 배웠어. 엄마 아빠랑 함께여서 좋았어! ❤️</p>
+              <div class="fam-card-tags">
+                <span class="fam-tag">공개수업</span>
+                <span class="fam-tag">가족일상</span>
+              </div>
+              <div class="fam-card-date">2026. 04. 21</div>
+            </div>
+          </a>
+        </div>
+
+        <div class="fam-card-wrap" data-category="다솜이">
+          <a href="posts/parapara-character.html" class="fam-card-link">
+            <div class="fam-card">
+              <div class="fam-card-icon">🐦</div>
+              <h3>다솜이의 캐릭터 - 파라파라!</h3>
+              <p>극락조를 컨셉으로 만든 다솜이의 부캐, 파라파라를 소개합니다 ❤️</p>
+              <div class="fam-card-tags">
+                <span class="fam-tag">파라파라</span>
+                <span class="fam-tag">캐릭터</span>
+                <span class="fam-tag">극락조</span>
+              </div>
+              <div class="fam-card-date">2026. 04. 21</div>
+            </div>
+          </a>
+        </div>
+
+        <div class="fam-filter-empty" id="fam-filter-empty">
+          <span class="fam-empty-icon">👨‍👩‍👧</span>
+          아직 작성된 글이 없어요.<br />소중한 가족 이야기로 곧 채워질 예정이에요 🌟
+        </div>
+
+      </div>
+    </section>
+
   </main>
 
   <footer class="app-footer">made with ♥ for 다솜이네 가족</footer>
+
+  <script>
+    function filterFamPosts(btn, filter) {
+      document.querySelectorAll('.fam-filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+
+      const cards = document.querySelectorAll('.fam-card-wrap');
+      let visibleCount = 0;
+
+      cards.forEach(card => {
+        if (filter === 'all' || card.dataset.category === filter) {
+          card.classList.remove('hidden');
+          visibleCount++;
+        } else {
+          card.classList.add('hidden');
+        }
+      });
+
+      document.getElementById('fam-filter-empty').style.display = visibleCount === 0 ? 'block' : 'none';
+
+      // 포스트 섹션으로 스크롤
+      document.getElementById('fam-post-grid').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  </script>
+
 </body>
 </html>

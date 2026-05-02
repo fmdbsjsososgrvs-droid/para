@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>오늘 급식은 짜장면! — DASOM's Blog</title>
+  <link rel="stylesheet" href="../style.css" />
+  <style>
+    @font-face {
+      font-family: '온글잎 룡룡';
+      src: local('온글잎 룡룡');
+    }
+
+    .diary-wrap {
+      font-family: '온글잎 룡룡', 'Noto Sans KR', sans-serif;
+    }
+
+    .diary-date {
+      display: inline-block;
+      background: #fff9c4;
+      border: 2px dashed #f9c846;
+      border-radius: 12px;
+      padding: 8px 20px;
+      font-family: '온글잎 룡룡', 'Noto Sans KR', sans-serif;
+      font-size: 1rem;
+      color: #b58a00;
+      margin-bottom: 28px;
+      box-shadow: 2px 3px 0 #f9c84655;
+      letter-spacing: .05em;
+    }
+
+    .diary-note {
+      background: #fffdf5;
+      border: 2.5px solid #e8dfc8;
+      border-radius: 18px;
+      padding: 36px 32px 36px 90px;
+      position: relative;
+      box-shadow: 4px 6px 0 #e8dfc8;
+      line-height: 2.4;
+      background-image:
+        repeating-linear-gradient(
+          transparent,
+          transparent 39px,
+          #dde8f5 39px,
+          #dde8f5 40px
+        );
+    }
+
+    .diary-note::before {
+      content: '';
+      position: absolute;
+      left: 72px;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: #f4b8c1;
+      border-radius: 2px;
+    }
+
+    .diary-holes {
+      display: flex;
+      flex-direction: column;
+      gap: 40px;
+      position: absolute;
+      left: 18px;
+      top: 30px;
+    }
+    .diary-hole {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: #e8dfc8;
+      border: 2px solid #d4c8b0;
+      box-shadow: inset 1px 2px 3px rgba(0,0,0,.08);
+    }
+
+    .diary-text {
+      font-family: '온글잎 룡룡', 'Noto Sans KR', sans-serif;
+      font-size: 1.18rem;
+      color: #3a3228;
+      padding-left: 0;
+    }
+
+    .diary-text p {
+      margin: 0 0 8px 0;
+      line-height: 2.4;
+    }
+
+    .diary-img-wrap {
+      text-align: center;
+      margin: 28px 0;
+    }
+    .diary-img-wrap img {
+      border-radius: 16px;
+      border: 3px dashed #f4b8c1;
+      padding: 8px;
+      background: #fff;
+      box-shadow: 3px 4px 0 #f4b8c155;
+      max-width: 240px;
+      width: 100%;
+    }
+    .diary-img-caption {
+      font-family: '온글잎 룡룡', 'Noto Sans KR', sans-serif;
+      font-size: .88rem;
+      color: #b58a00;
+      margin-top: 8px;
+    }
+
+    .diary-callout {
+      background: #fff0f5;
+      border-left: 5px solid #f4b8c1;
+      border-radius: 0 12px 12px 0;
+      padding: 16px 20px;
+      margin: 20px 0;
+      font-family: '온글잎 룡룡', 'Noto Sans KR', sans-serif;
+      font-size: 1.08rem;
+      color: #c0516e;
+      line-height: 2;
+    }
+
+    .diary-ending {
+      text-align: right;
+      font-family: '온글잎 룡룡', 'Noto Sans KR', sans-serif;
+      font-size: 1.2rem;
+      color: #e05c7a;
+      padding-top: 8px;
+    }
+
+    .post-title,
+    .post-category,
+    .post-meta-item {
+      font-family: '온글잎 룡룡', 'Noto Sans KR', sans-serif !important;
+    }
+    .post-title {
+      font-size: clamp(1.5rem, 3.5vw, 2.2rem) !important;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="header-inner">
+      <div class="header-text">
+        <div class="site-title">DASOM's Blog</div>
+        <div class="site-subtitle">다솜이의 공간입니다🐦</div>
+      </div>
+    </div>
+  </header>
+
+  <nav>
+    <ul>
+      <li><a href="../index.html">PARAPARA</a></li>
+      <li><a href="../family.html" class="active">Family</a></li>
+      <li><a href="../travel.html">Travel</a></li>
+      <li><a href="../collection.html">Collection</a></li>
+      <li><a href="../reviews.html">Reviews</a></li>
+    </ul>
+  </nav>
+
+  <div class="page-wrap">
+
+    <a href="../family.html" class="post-back">목록으로</a>
+
+    <div class="post-header">
+      <span class="post-category">Family · 다솜이</span>
+      <h1 class="post-title">오늘 급식은 짜장면! 🍜</h1>
+      <div class="post-meta">
+        <span class="post-meta-item">🐦 DASOM</span>
+        <span class="post-meta-divider"></span>
+        <span class="post-meta-item">2026. 04. 29</span>
+        <span class="post-meta-divider"></span>
+        <span class="post-meta-item">약 1분</span>
+      </div>
+    </div>
+
+    <div class="diary-wrap">
+
+      <div class="diary-date">📅 2026년 4월 29일</div>
+
+      <div class="diary-note">
+
+        <div class="diary-holes">
+          <div class="diary-hole"></div>
+          <div class="diary-hole"></div>
+          <div class="diary-hole"></div>
+          <div class="diary-hole"></div>
+          <div class="diary-hole"></div>
+          <div class="diary-hole"></div>
+        </div>
+
+        <div class="diary-text">
+
+          <p>오늘은 급식에서 <strong>짜장면</strong>이 나왔다! 🍜</p>
+          <p>짜장면이 너무 맛있어서</p>
+          <p>두 그릇이나 먹었다.</p>
+          <p>한 접시는 반만 먹었다. 히히 😆</p>
+
+          <div class="diary-img-wrap">
+            <img src="../kikkik.png" alt="신난 다솜이" />
+            <div class="diary-img-caption">😄 짜장면 짱 맛있어!</div>
+          </div>
+
+          <p>닭다리도 나왔다.</p>
+          <p>근데 내가 싫어하는 양념이 묻어 있어서</p>
+          <p>조금만 먹었다. 😅</p>
+
+          <div class="diary-img-wrap">
+            <img src="../nojam.png" alt="노잼" />
+            <div class="diary-img-caption">😑 양념은 노잼이야...</div>
+          </div>
+
+          <div class="diary-callout">
+            🍕 내가 제일 좋아하는 음식은<br />
+            <strong>닭강정</strong>이랑 <strong>하와이안 피자</strong>다!
+          </div>
+
+          <div class="diary-img-wrap">
+            <img src="../smile.png" alt="활짝 웃는 다솜이" />
+            <div class="diary-img-caption">😊 생각만 해도 행복해</div>
+          </div>
+
+        </div>
+
+        <div class="diary-ending">
+          오늘 급식 짱! ⭐
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="post-tags">
+      <div class="post-tags-label">Tags</div>
+      <span class="tag">다솜이</span>
+      <span class="tag">급식</span>
+      <span class="tag">짜장면</span>
+      <span class="tag">학교일상</span>
+    </div>
+
+  </div>
+
+  <footer>
+    <div class="footer-deco">🐦 🌺 🐦 🌺</div>
+    © 2026 DASOM's Blog · All rights reserved
+  </footer>
+
+</body>
+</html>
