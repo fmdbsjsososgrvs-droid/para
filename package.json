@@ -1,0 +1,8 @@
+{
+  "name": "dasom-family-site",
+  "private": true,
+  "description": "다솜이네 가족 홈페이지 (정적 사이트 + Discord 로그인 게이트)",
+  "dependencies": {
+    "@vercel/functions": "^3.0.0"
+  }
+}

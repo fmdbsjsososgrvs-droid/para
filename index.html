@@ -167,6 +167,16 @@
     }
     .pw-btn:active { transform: translateY(0); }
 
+    .discord-btn {
+      display: inline-block;
+      text-decoration: none;
+      background: linear-gradient(135deg, #5865F2 0%, #7289DA 100%);
+      box-shadow: 0 6px 18px rgba(88, 101, 242, 0.45);
+    }
+    .discord-btn:hover {
+      box-shadow: 0 9px 22px rgba(88, 101, 242, 0.55);
+    }
+
     .err {
       min-height: 20px;
       color: #e06b86;
@@ -213,22 +223,27 @@
       <img src="11/11.png" alt="" />
     </div>
 
-    <form class="pw-form" id="pwForm" autocomplete="off">
-      <input
-        type="password"
-        id="pw"
-        class="pw-input"
-        placeholder="비밀번호"
-        maxlength="32"
-        required
-      />
-      <button type="submit" class="pw-btn">들어가기</button>
-      <div class="err" id="err">&nbsp;</div>
-    </form>
+    <a href="/api/auth/login" class="pw-btn discord-btn">Discord로 로그인</a>
+    <div class="err" id="err">&nbsp;</div>
 
     <p class="footer-note">사랑하는 가족만 들어올 수 있어요 ♥</p>
   </main>
 
-  <script type="module" src="js/auth.js"></script>
+  <script>
+    // Discord 로그인 실패 시 콜백에서 붙여주는 ?error= 코드를 사람이 읽을 메시지로 보여줍니다.
+    (function () {
+      const messages = {
+        invalid_state: '로그인 요청이 만료됐어요. 다시 시도해주세요.',
+        token_exchange_failed: 'Discord 인증에 실패했어요. 잠시 후 다시 시도해주세요.',
+        user_fetch_failed: 'Discord 사용자 정보를 가져오지 못했어요.',
+        not_allowed: '허용되지 않은 계정이에요 🥲',
+      };
+      const code = new URLSearchParams(location.search).get('error');
+      if (code) {
+        const err = document.getElementById('err');
+        err.textContent = messages[code] || '로그인에 실패했어요.';
+      }
+    })();
+  </script>
 </body>
 </html>
