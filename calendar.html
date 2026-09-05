@@ -519,14 +519,12 @@
   } from './js/firebase-init.js';
 
   // Firestore 호출 전 익명 인증 보장 (보안 규칙: request.auth != null)
+  // 로그인 자체(Discord)는 서버가 이미 확인했으니, 여기서 실패해도
+  // 억지로 로그아웃시키지 않고 콘솔에만 남깁니다. (데이터 동기화만 잠시 늦어질 수 있음)
   try {
     await ensureSignedIn();
   } catch (e) {
-    console.error('Firebase 인증 실패', e);
-    alert('인증이 만료됐어요. 다시 로그인해 주세요.');
-    sessionStorage.removeItem('dasom_family_auth');
-    location.replace('index.html');
-    throw e;
+    console.error('Firebase 익명 인증 실패 (일시적일 수 있음)', e);
   }
 
   (function () {

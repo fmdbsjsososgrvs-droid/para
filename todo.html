@@ -224,15 +224,11 @@
     ensureSignedIn,
   } from './js/firebase-init.js';
 
-  // 인증 보장
+  // 인증 보장 — 실패해도(Discord 로그인은 서버가 이미 확인했으므로) 억지로 로그아웃시키지 않음
   try {
     await ensureSignedIn();
   } catch (e) {
-    console.error('Firebase 인증 실패', e);
-    alert('인증이 만료됐어요. 다시 로그인해 주세요.');
-    sessionStorage.removeItem('dasom_family_auth');
-    location.replace('index.html');
-    throw e;
+    console.error('Firebase 익명 인증 실패 (일시적일 수 있음)', e);
   }
 
   (function () {

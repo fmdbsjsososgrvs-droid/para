@@ -68,8 +68,20 @@ export async function ensureSignedIn() {
     });
   });
   if (auth.currentUser) return auth.currentUser;
-  const cred = await signInAnonymously(auth);
-  return cred.user;
+
+  // 홈 화면 앱(iOS 등)에서 백그라운드 복귀 직후처럼 네트워크가 잠깐 불안정할 때가 있어서,
+  // 곧바로 실패 처리하지 않고 짧게 몇 번 재시도해봅니다.
+  let lastErr;
+  for (const delayMs of [0, 500, 1500]) {
+    if (delayMs) await new Promise((r) => setTimeout(r, delayMs));
+    try {
+      const cred = await signInAnonymously(auth);
+      return cred.user;
+    } catch (e) {
+      lastErr = e;
+    }
+  }
+  throw lastErr;
 }
 
 /* 로그아웃 (Firebase 익명 세션 종료) */
