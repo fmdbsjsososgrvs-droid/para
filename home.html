@@ -15,51 +15,107 @@
   <link rel="stylesheet" href="css/style.css" />
   <script src="js/guard.js"></script>
   <style>
-    .hero {
-      display: grid;
-      grid-template-columns: 1.2fr 1fr;
-      gap: 30px;
-      align-items: center;
-      padding: 30px 10px 10px;
+    :root {
+      --cat-all:   #c8b6e2;   /* 공통 — 보라 */
+      --cat-all-s: #ece4f7;
+      --cat-mom:   #f7a8a8;   /* 엄마 — 빨강 */
+      --cat-mom-s: #fcd5d5;
+      --cat-dad:   #a8c8ec;   /* 아빠 — 파랑 */
+      --cat-dad-s: #d6e4f6;
+      --cat-da:    #f7d976;   /* 다솜 — 노랑 */
+      --cat-da-s:  #fcecb3;
     }
-    .hero-text h2 {
-      font-family: 'Gaegu', 'Apple SD Gothic Neo', '돋움', sans-serif;
-      font-size: 42px;
-      color: var(--accent-deep);
-      margin: 0 0 14px;
-      line-height: 1.2;
-    }
-    .hero-text p {
-      font-size: 17px;
-      color: #6b4a55;
-      line-height: 1.7;
-      margin: 0 0 12px;
-    }
-    .hero-img {
+
+    .greeting {
       text-align: center;
-      position: relative;
+      color: #8a6f7a;
+      font-size: 15px;
+      margin: 4px 0 22px;
     }
-    .hero-img img.main {
-      width: 240px;
-      animation: bob 3s ease-in-out infinite;
-      filter: drop-shadow(4px 6px 8px rgba(217, 106, 138, 0.25));
+    .greeting b {
+      color: var(--accent-deep);
     }
-    .hero-img img.side {
-      position: absolute;
-      width: 110px;
-      bottom: 0;
-      right: 10%;
-      animation: bob 3s ease-in-out infinite 0.5s;
+
+    .sched-card {
+      margin-bottom: 22px;
     }
-    @keyframes bob {
-      0%, 100% { transform: translateY(0) rotate(0); }
-      50%      { transform: translateY(-12px) rotate(-3deg); }
+    .sched-card:last-child {
+      margin-bottom: 0;
     }
-    @media (max-width: 720px) {
-      .hero { grid-template-columns: 1fr; text-align: center; }
-      .hero-text h2 { font-size: 32px; }
-      .hero-img img.main { width: 180px; }
-      .hero-img img.side { width: 80px; right: 20%; }
+    .sched-title {
+      font-family: 'Gaegu', 'Apple SD Gothic Neo', '돋움', sans-serif;
+      font-size: 26px;
+      font-weight: 700;
+      color: var(--accent-deep);
+      margin: 0 0 4px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .sched-sub {
+      margin: 0 0 18px;
+      color: #a48b96;
+      font-size: 13px;
+    }
+
+    .sched-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .sched-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 16px;
+      border-radius: 16px;
+      border-left: 6px solid var(--cat-all);
+      background: var(--cat-all-s);
+    }
+    .sched-item.cat-all { border-left-color: var(--cat-all); background: var(--cat-all-s); }
+    .sched-item.cat-mom { border-left-color: var(--cat-mom); background: var(--cat-mom-s); }
+    .sched-item.cat-dad { border-left-color: var(--cat-dad); background: var(--cat-dad-s); }
+    .sched-item.cat-da  { border-left-color: var(--cat-da);  background: var(--cat-da-s); }
+
+    .sched-meta {
+      flex: 0 0 auto;
+      min-width: 64px;
+      font-size: 13px;
+      font-weight: 700;
+      color: #6b4a55;
+      white-space: nowrap;
+    }
+    .sched-content {
+      flex: 1 1 auto;
+      font-size: 15px;
+      color: #4a3a41;
+      word-break: break-word;
+    }
+    .sched-tag {
+      flex: 0 0 auto;
+      font-size: 12px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.7);
+      color: #6b4a55;
+      white-space: nowrap;
+    }
+
+    .sched-empty {
+      padding: 20px 16px;
+      text-align: center;
+      color: #b39aa6;
+      font-size: 14px;
+      background: rgba(255,255,255,0.5);
+      border-radius: 16px;
+    }
+
+    @media (max-width: 560px) {
+      .sched-item { flex-wrap: wrap; }
+      .sched-tag { margin-left: auto; }
     }
   </style>
 </head>
@@ -81,20 +137,157 @@
   </nav>
 
   <main class="page">
-    <section class="card">
-      <div class="hero">
-        <div class="hero-text">
-          <h2>다솜이의 블로그 ♥</h2>
-          <p>어서와! 여긴 다솜이의 공간이야!<br/>내 이야기를 들어볼래?</p>
-        </div>
-        <div class="hero-img">
-          <img class="main" src="11/happy.png" alt="다솜이" />
-          <img class="side" src="11/11.png" alt="강아지" />
-        </div>
-      </div>
+    <p class="greeting" id="greeting">&nbsp;</p>
+
+    <section class="card sched-card">
+      <h2 class="sched-title">☀️ 오늘의 일정</h2>
+      <p class="sched-sub" id="todaySub">&nbsp;</p>
+      <ul class="sched-list" id="todayList"></ul>
+    </section>
+
+    <section class="card sched-card">
+      <h2 class="sched-title">🗓️ 이번주 일정</h2>
+      <p class="sched-sub" id="weekSub">&nbsp;</p>
+      <ul class="sched-list" id="weekList"></ul>
+    </section>
+
+    <section class="card sched-card">
+      <h2 class="sched-title">👨‍👩‍👧 공통 일정</h2>
+      <p class="sched-sub">가족 모두의 일정이에요</p>
+      <ul class="sched-list" id="commonList"></ul>
     </section>
   </main>
 
   <footer class="app-footer">made with ♥ for 다솜이네 가족</footer>
+
+  <script type="module">
+  /* ───────────────────────────────────────────
+   * 다솜이네 — 홈 대시보드
+   * dasom_events 컬렉션을 실시간 구독해서
+   * 오늘 / 이번주 / 공통(cat=all) 일정을 뽑아 보여줍니다.
+   * ─────────────────────────────────────────── */
+  import {
+    db, COLS,
+    collection,
+    onSnapshot,
+    ensureSignedIn,
+  } from './js/firebase-init.js';
+
+  // 인증 보장 — 실패해도(Discord 로그인은 서버가 이미 확인했으므로) 억지로 로그아웃시키지 않음
+  try {
+    await ensureSignedIn();
+  } catch (e) {
+    console.error('Firebase 익명 인증 실패 (일시적일 수 있음)', e);
+  }
+
+  (function () {
+    'use strict';
+
+    const CATS = {
+      all: { label: '공통', cls: 'cat-all' },
+      mom: { label: '엄마', cls: 'cat-mom' },
+      dad: { label: '아빠', cls: 'cat-dad' },
+      da:  { label: '다솜', cls: 'cat-da'  },
+    };
+    const WEEKDAY = ['일', '월', '화', '수', '목', '금', '토'];
+
+    function pad(n) { return String(n).padStart(2, '0'); }
+    function dateKey(d) { return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`; }
+    function dateLabel(key) {
+      const [y, m, d] = key.split('-').map(Number);
+      const dt = new Date(y, m - 1, d);
+      return `${m}/${d}(${WEEKDAY[dt.getDay()]})`;
+    }
+
+    const today = new Date();
+    const todayKey = dateKey(today);
+
+    // 이번주 = 일요일~토요일
+    const weekStart = new Date(today);
+    weekStart.setDate(today.getDate() - today.getDay());
+    const weekEnd = new Date(weekStart);
+    weekEnd.setDate(weekStart.getDate() + 6);
+    const weekStartKey = dateKey(weekStart);
+    const weekEndKey = dateKey(weekEnd);
+
+    document.getElementById('greeting').innerHTML =
+      `오늘은 <b>${today.getMonth() + 1}월 ${today.getDate()}일 (${WEEKDAY[today.getDay()]})</b> 이에요`;
+    document.getElementById('todaySub').textContent =
+      `${today.getMonth() + 1}월 ${today.getDate()}일`;
+    document.getElementById('weekSub').textContent =
+      `${dateLabel(weekStartKey)} ~ ${dateLabel(weekEndKey)}`;
+
+    const todayListEl = document.getElementById('todayList');
+    const weekListEl = document.getElementById('weekList');
+    const commonListEl = document.getElementById('commonList');
+
+    function renderList(el, items, { showDate, emptyMsg }) {
+      el.innerHTML = '';
+      if (!items.length) {
+        const li = document.createElement('li');
+        li.className = 'sched-empty';
+        li.textContent = emptyMsg;
+        el.appendChild(li);
+        return;
+      }
+      items.forEach((ev) => {
+        const cat = CATS[ev.cat] || CATS.all;
+        const li = document.createElement('li');
+        li.className = 'sched-item ' + cat.cls;
+
+        const meta = document.createElement('div');
+        meta.className = 'sched-meta';
+        meta.textContent = [showDate ? dateLabel(ev.date) : null, ev.time || null]
+          .filter(Boolean)
+          .join(' ');
+
+        const content = document.createElement('div');
+        content.className = 'sched-content';
+        content.textContent = ev.content;
+
+        const tag = document.createElement('span');
+        tag.className = 'sched-tag';
+        tag.textContent = cat.label;
+
+        li.appendChild(meta);
+        li.appendChild(content);
+        li.appendChild(tag);
+        el.appendChild(li);
+      });
+    }
+
+    function byDateTime(a, b) {
+      return (a.date + (a.time || '')).localeCompare(b.date + (b.time || ''));
+    }
+
+    const eventsRef = collection(db, COLS.events);
+    onSnapshot(eventsRef, (snap) => {
+      const all = [];
+      snap.forEach((d) => {
+        const data = d.data();
+        if (data && data.date) all.push({ id: d.id, ...data });
+      });
+
+      const todayItems = all
+        .filter((e) => e.date === todayKey)
+        .sort(byDateTime);
+
+      const weekItems = all
+        .filter((e) => e.date >= weekStartKey && e.date <= weekEndKey)
+        .sort(byDateTime);
+
+      const commonItems = all
+        .filter((e) => e.cat === 'all' && e.date >= todayKey)
+        .sort(byDateTime)
+        .slice(0, 8);
+
+      renderList(todayListEl, todayItems, { showDate: false, emptyMsg: '오늘은 등록된 일정이 없어요 🌤️' });
+      renderList(weekListEl, weekItems, { showDate: true, emptyMsg: '이번 주엔 등록된 일정이 없어요' });
+      renderList(commonListEl, commonItems, { showDate: true, emptyMsg: '등록된 공통 일정이 없어요' });
+    }, (err) => {
+      console.error('[home] onSnapshot error', err);
+    });
+  })();
+  </script>
 </body>
 </html>
