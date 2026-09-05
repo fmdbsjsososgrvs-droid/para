@@ -505,15 +505,15 @@
         alert('작성자를 먼저 선택해주세요.');
         return;
       }
-      const html = sanitizeHtml(editor.innerHTML);
-      const plain = html.replace(/<[^>]+>/g, '').trim();
-      const hasImg = /<img\s/i.test(html);
-      if (!plain && !hasImg) {
-        alert('내용을 입력해주세요.');
-        return;
-      }
       btnSave.disabled = true;
       try {
+        const html = sanitizeHtml(editor.innerHTML);
+        const plain = html.replace(/<[^>]+>/g, '').trim();
+        const hasImg = /<img\s/i.test(html);
+        if (!plain && !hasImg) {
+          alert('내용을 입력해주세요.');
+          return;
+        }
         await addDoc(memosRef, {
           author: selectedAuthor,
           html,
@@ -521,6 +521,8 @@
         });
         resetForm();
       } catch (err) {
+        // sanitizeHtml()의 예외까지 여기서 잡아서, 저장이 조용히 실패하는 대신
+        // 항상 알림이 뜨도록 합니다.
         console.error(err);
         alert('저장에 실패했어요: ' + err.message);
       } finally {
@@ -534,43 +536,61 @@
       tmp.innerHTML = rawHtml;
       const validImgSrc = /^(?:12|13|14)\/[A-Za-z0-9_.\-]+\.(?:png|jpg|jpeg|webp|gif)$/i;
 
+      // 형제 노드를 앞에서부터 한 번만 훑으면서 정제합니다.
+      // (예전에는 div/p를 풀어낸 뒤 같은 노드를 처음부터 재귀로 다시 훑었는데,
+      //  그러면 바깥쪽 forEach가 이미 제거된 예전 div를 다시 건드리면서
+      //  "참조 노드가 이 노드의 자식이 아닙니다" 에러가 났습니다.
+      //  여러 줄(문단이 여러 개인 div들)짜리 메모에서 특히 잘 재현됐습니다.)
       function clean(node) {
-        Array.from(node.childNodes).forEach(child => {
-          if (child.nodeType === Node.TEXT_NODE) return;
+        let child = node.firstChild;
+        while (child) {
+          if (child.nodeType === Node.TEXT_NODE) {
+            child = child.nextSibling;
+            continue;
+          }
           if (child.nodeType !== Node.ELEMENT_NODE) {
+            const next = child.nextSibling;
             child.remove();
-            return;
+            child = next;
+            continue;
           }
           const tag = child.tagName.toLowerCase();
           if (tag === 'br') {
-            // OK
-            return;
+            child = child.nextSibling;
+            continue;
           }
           if (tag === 'img') {
+            const next = child.nextSibling;
             const src = child.getAttribute('src') || '';
-            if (!validImgSrc.test(src)) { child.remove(); return; }
-            // 다른 속성 제거
-            Array.from(child.attributes).forEach(attr => {
-              if (attr.name !== 'src' && attr.name !== 'alt') {
-                child.removeAttribute(attr.name);
-              }
-            });
-            return;
+            if (!validImgSrc.test(src)) {
+              child.remove();
+            } else {
+              // 다른 속성 제거
+              Array.from(child.attributes).forEach(attr => {
+                if (attr.name !== 'src' && attr.name !== 'alt') {
+                  child.removeAttribute(attr.name);
+                }
+              });
+            }
+            child = next;
+            continue;
           }
           if (tag === 'div' || tag === 'p') {
-            // 줄바꿈으로 변환 후 자식 노드만 보존
+            // 줄바꿈으로 변환 후 자식 노드만 보존하고,
+            // 방금 끌어올린 내용부터 이어서 계속 정제합니다.
             const br = document.createElement('br');
             node.insertBefore(br, child);
             while (child.firstChild) node.insertBefore(child.firstChild, child);
             child.remove();
-            // 새로 끼워진 노드들은 다음 forEach 사이클에서 다뤄지지 않음 → 별도 정제 위해 클린 재실행
-            clean(node);
-            return;
+            child = br;
+            continue;
           }
           // 그 외 태그 → 텍스트만 살림
+          const next = child.nextSibling;
           const text = document.createTextNode(child.textContent || '');
           node.replaceChild(text, child);
-        });
+          child = next;
+        }
       }
       clean(tmp);
       // 끝에 br 정리
