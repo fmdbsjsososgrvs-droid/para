@@ -79,6 +79,10 @@
     .sched-item.cat-mom { border-left-color: var(--cat-mom); background: var(--cat-mom-s); }
     .sched-item.cat-dad { border-left-color: var(--cat-dad); background: var(--cat-dad-s); }
     .sched-item.cat-da  { border-left-color: var(--cat-da);  background: var(--cat-da-s); }
+    .sched-item.todo-row {
+      border-left-color: var(--accent);
+      background: rgba(255, 158, 183, 0.12);
+    }
 
     .sched-meta {
       flex: 0 0 auto;
@@ -152,9 +156,9 @@
     </section>
 
     <section class="card sched-card">
-      <h2 class="sched-title">👨‍👩‍👧 공통 일정</h2>
-      <p class="sched-sub">가족 모두의 일정이에요</p>
-      <ul class="sched-list" id="commonList"></ul>
+      <h2 class="sched-title">✅ 해야 할일</h2>
+      <p class="sched-sub" id="todoSub">가족의 할 일 목록이에요</p>
+      <ul class="sched-list" id="todoList"></ul>
     </section>
   </main>
 
@@ -163,8 +167,8 @@
   <script type="module">
   /* ───────────────────────────────────────────
    * 다솜이네 — 홈 대시보드
-   * dasom_events 컬렉션을 실시간 구독해서
-   * 오늘 / 이번주 / 공통(cat=all) 일정을 뽑아 보여줍니다.
+   * dasom_events(오늘/이번주 일정)와 dasom_todos(해야 할일)를
+   * 각각 실시간 구독해서 보여줍니다.
    * ─────────────────────────────────────────── */
   import {
     db, COLS,
@@ -219,7 +223,10 @@
 
     const todayListEl = document.getElementById('todayList');
     const weekListEl = document.getElementById('weekList');
-    const commonListEl = document.getElementById('commonList');
+    const todoListEl = document.getElementById('todoList');
+    const todoSubEl = document.getElementById('todoSub');
+
+    function tsSeconds(t) { return (t && t.seconds) || 0; }
 
     function renderList(el, items, { showDate, emptyMsg }) {
       el.innerHTML = '';
@@ -276,16 +283,62 @@
         .filter((e) => e.date >= weekStartKey && e.date <= weekEndKey)
         .sort(byDateTime);
 
-      const commonItems = all
-        .filter((e) => e.cat === 'all' && e.date >= todayKey)
-        .sort(byDateTime)
-        .slice(0, 8);
-
       renderList(todayListEl, todayItems, { showDate: false, emptyMsg: '오늘은 등록된 일정이 없어요 🌤️' });
       renderList(weekListEl, weekItems, { showDate: true, emptyMsg: '이번 주엔 등록된 일정이 없어요' });
-      renderList(commonListEl, commonItems, { showDate: true, emptyMsg: '등록된 공통 일정이 없어요' });
     }, (err) => {
-      console.error('[home] onSnapshot error', err);
+      console.error('[home] events onSnapshot error', err);
+    });
+
+    // ─── 해야 할일 (dasom_todos, todo.html과 같은 컬렉션) ───
+    function renderTodoList(items, totalUndone) {
+      todoListEl.innerHTML = '';
+      if (!items.length) {
+        const li = document.createElement('li');
+        li.className = 'sched-empty';
+        li.textContent = '해야 할 일이 없어요 🎉';
+        todoListEl.appendChild(li);
+        return;
+      }
+      items.forEach((t) => {
+        const li = document.createElement('li');
+        li.className = 'sched-item todo-row';
+
+        const mark = document.createElement('div');
+        mark.className = 'sched-meta';
+        mark.textContent = '☐';
+
+        const content = document.createElement('div');
+        content.className = 'sched-content';
+        content.textContent = t.text || '';
+
+        li.appendChild(mark);
+        li.appendChild(content);
+        todoListEl.appendChild(li);
+      });
+      if (totalUndone > items.length) {
+        const li = document.createElement('li');
+        li.className = 'sched-empty';
+        li.textContent = `+ ${totalUndone - items.length}개 더 (해야 할일 페이지에서 확인)`;
+        todoListEl.appendChild(li);
+      }
+    }
+
+    const todosRef = collection(db, COLS.todos);
+    onSnapshot(todosRef, (snap) => {
+      const items = [];
+      snap.forEach((d) => {
+        const data = d.data();
+        if (data) items.push({ id: d.id, ...data });
+      });
+
+      const undone = items
+        .filter((t) => !t.done)
+        .sort((a, b) => tsSeconds(a.createdAt) - tsSeconds(b.createdAt));
+
+      todoSubEl.textContent = undone.length ? `${undone.length}개 남았어요` : '가족의 할 일 목록이에요';
+      renderTodoList(undone.slice(0, 8), undone.length);
+    }, (err) => {
+      console.error('[home] todos onSnapshot error', err);
     });
   })();
   </script>
