@@ -209,16 +209,17 @@
     /* 카테고리 라디오 */
     .cat-row {
       display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
+      gap: 6px;
+      flex-wrap: nowrap;
     }
     .cat-row label {
-      flex: 1 1 calc(50% - 8px);
-      min-width: 110px;
-      padding: 9px 12px;
+      flex: 1 1 0;
+      min-width: 0;
+      padding: 6px 4px;
       border-radius: 999px;
       cursor: pointer;
-      font-size: 14px;
+      font-size: 20px;
+      line-height: 1.2;
       text-align: center;
       border: 2px solid transparent;
       transition: all .15s;
@@ -236,28 +237,6 @@
     .cat-row label:has(input:checked).cat-mom { border-color: var(--cat-mom); background: #fff; }
     .cat-row label:has(input:checked).cat-dad { border-color: var(--cat-dad); background: #fff; }
     .cat-row label:has(input:checked).cat-da  { border-color: var(--cat-da);  background: #fff; }
-
-    /* 이모티콘 툴바 */
-    .emoji-bar {
-      display: flex;
-      gap: 6px;
-      margin-bottom: 6px;
-    }
-    .emoji-bar button {
-      width: 36px;
-      height: 36px;
-      border: 2px solid var(--accent-soft);
-      background: var(--paper);
-      border-radius: 10px;
-      cursor: pointer;
-      font-size: 18px;
-      transition: all .15s;
-    }
-    .emoji-bar button:hover {
-      transform: translateY(-2px);
-      background: #fff;
-      border-color: var(--accent);
-    }
 
     /* 모달 액션 */
     .actions {
@@ -454,43 +433,28 @@
 
       <form id="evForm" autocomplete="off">
         <div class="field">
-          <label for="fDate">날짜</label>
-          <input type="date" id="fDate" required />
-        </div>
-        <div class="field">
-          <label for="fTime">시간</label>
-          <input type="time" id="fTime" />
-        </div>
-        <div class="field">
           <label>카테고리</label>
           <div class="cat-row">
-            <label class="cat-all">
+            <label class="cat-all" title="전체">
               <input type="radio" name="cat" value="all" checked />
-              <span>전체</span>
+              <span>🏠</span>
             </label>
-            <label class="cat-mom">
+            <label class="cat-mom" title="엄마">
               <input type="radio" name="cat" value="mom" />
-              <span>엄마</span>
+              <span>🐩</span>
             </label>
-            <label class="cat-dad">
+            <label class="cat-dad" title="아빠">
               <input type="radio" name="cat" value="dad" />
-              <span>아빠</span>
+              <span>🦉</span>
             </label>
-            <label class="cat-da">
+            <label class="cat-da" title="다솜">
               <input type="radio" name="cat" value="da" />
-              <span>다솜</span>
+              <span>🐦</span>
             </label>
           </div>
         </div>
         <div class="field">
           <label for="fContent">내용</label>
-          <div class="emoji-bar" id="emojiBar">
-            <button type="button" data-emoji="⭐">⭐</button>
-            <button type="button" data-emoji="❤️">❤️</button>
-            <button type="button" data-emoji="🐩">🐩</button>
-            <button type="button" data-emoji="🐦">🐦</button>
-            <button type="button" data-emoji="🦉">🦉</button>
-          </div>
           <textarea id="fContent" placeholder="일정 내용을 적어주세요" required></textarea>
         </div>
 
@@ -583,7 +547,7 @@
       renderCalendar();
       if (modalDate) {
         // 다른 디바이스에서 수정 중인 항목이 삭제됐으면 수정 모드 해제
-        if (editingId && !EventStore.get(editingDate, editingId)) {
+        if (editingId && !EventStore.get(modalDate, editingId)) {
           exitEditMode();
         }
         renderEvList();
@@ -667,15 +631,12 @@
     const modalBg = document.getElementById('modalBg');
     const modalDateLabel = document.getElementById('modalDateLabel');
     const evForm = document.getElementById('evForm');
-    const fDate = document.getElementById('fDate');
-    const fTime = document.getElementById('fTime');
     const fContent = document.getElementById('fContent');
     const evList = document.getElementById('evList');
     const btnSubmit = document.getElementById('btnSubmit');
     const btnCancelEdit = document.getElementById('btnCancelEdit');
     let modalDate = null;
     let editingId = null;     // 수정 중인 일정 id (없으면 신규 입력 모드)
-    let editingDate = null;   // 수정 시작 시점의 원래 날짜
 
     function openModal(key) {
       modalDate = key;
@@ -706,15 +667,11 @@
       modalBg.setAttribute('aria-hidden', 'true');
       modalDate = null;
       editingId = null;
-      editingDate = null;
     }
 
     // ─── 수정 모드 진입 / 종료 ───
     function enterEditMode(ev) {
       editingId = ev.id;
-      editingDate = modalDate;
-      fDate.value = modalDate;
-      fTime.value = ev.time || '';
       fContent.value = ev.content || '';
       const radio = evForm.querySelector(`input[name="cat"][value="${ev.cat}"]`);
       if (radio) radio.checked = true;
@@ -726,9 +683,6 @@
     }
     function exitEditMode() {
       editingId = null;
-      editingDate = null;
-      fDate.value = modalDate;
-      fTime.value = '';
       fContent.value = '';
       const allRadio = evForm.querySelector('input[name="cat"][value="all"]');
       if (allRadio) allRadio.checked = true;
@@ -788,57 +742,28 @@
       if (e.key === 'Escape' && modalBg.classList.contains('open')) closeModal();
     });
 
-    // 이모티콘 삽입
-    document.getElementById('emojiBar').addEventListener('click', (e) => {
-      const btn = e.target.closest('button[data-emoji]');
-      if (!btn) return;
-      const em = btn.dataset.emoji;
-      const start = fContent.selectionStart || fContent.value.length;
-      const end = fContent.selectionEnd || fContent.value.length;
-      const v = fContent.value;
-      fContent.value = v.slice(0, start) + em + v.slice(end);
-      const pos = start + em.length;
-      fContent.setSelectionRange(pos, pos);
-      fContent.focus();
-    });
-
     // 저장 (신규) / 수정 완료 분기 — Firestore 비동기 호출
+    // (날짜는 달력에서 누른 셀 그대로 사용하고, 시간 입력은 없앴습니다)
     evForm.addEventListener('submit', async (e) => {
       e.preventDefault();
-      const date = fDate.value;
-      const time = fTime.value;
       const cat = evForm.querySelector('input[name="cat"]:checked').value;
       const content = fContent.value.trim();
-      if (!date || !content) return;
+      if (!modalDate || !content) return;
 
       btnSubmit.disabled = true;
       const wasEditing = !!editingId;
       try {
         if (editingId) {
-          // 수정 모드 — 날짜가 바뀌었으면 그쪽 날짜로 이동시키고, 같으면 제자리 업데이트
-          if (date !== editingDate) {
-            await EventStore.remove(editingDate, editingId);
-            await EventStore.add(date, { time, cat, content });
-          } else {
-            await EventStore.update(date, editingId, { time, cat, content });
-          }
+          // time 필드는 건드리지 않아서, 옛날에 시간이 있던 일정도 그대로 유지됩니다.
+          await EventStore.update(modalDate, editingId, { cat, content });
         } else {
-          await EventStore.add(date, { time, cat, content });
-        }
-
-        // 모달 컨텍스트를 저장된 날짜로 이동
-        if (date !== modalDate) {
-          modalDate = date;
-          const [y, m, d] = date.split('-').map(Number);
-          const wk = ['일','월','화','수','목','금','토'][new Date(y, m - 1, d).getDay()];
-          modalDateLabel.textContent = `${y}년 ${m}월 ${d}일 (${wk})`;
+          await EventStore.add(modalDate, { time: '', cat, content });
         }
 
         if (wasEditing) {
           exitEditMode();
         } else {
-          // 신규 — 카테고리는 유지하고 시간/내용만 비움
-          fTime.value = '';
+          // 신규 — 카테고리는 유지하고 내용만 비움
           fContent.value = '';
         }
         // 화면 갱신은 onSnapshot 이 받아서 처리, 즉시 보여주려면 한 번 더 그려줘도 됨
