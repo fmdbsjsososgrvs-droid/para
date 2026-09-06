@@ -228,38 +228,6 @@
     .author-btn.selected[data-author="dad"]   { background: var(--au-dad-s); border-color: var(--au-dad); }
     .author-btn.selected[data-author="dasom"] { background: var(--au-da-s);  border-color: var(--au-da);  }
 
-    /* 이미지 피커 */
-    .image-picker {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(64px, 1fr));
-      gap: 6px;
-      padding: 12px;
-      background: rgba(255, 255, 255, 0.55);
-      border: 2px dashed var(--accent-soft);
-      border-radius: 14px;
-      max-height: 200px;
-      overflow-y: auto;
-    }
-    .image-picker button {
-      border: 2px solid transparent;
-      background: #fff;
-      border-radius: 8px;
-      padding: 4px;
-      cursor: pointer;
-      transition: all .15s;
-      aspect-ratio: 1;
-    }
-    .image-picker button:hover {
-      border-color: var(--accent);
-      transform: scale(1.05);
-    }
-    .image-picker img {
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-      pointer-events: none; /* 부모 button이 이벤트 받게 */
-    }
-
     /* 본문 에디터 */
     .memo-editor {
       min-height: 130px;
@@ -457,11 +425,6 @@
           <input type="text" id="memoTitleInput" class="title-input" placeholder="제목을 적어주세요" maxlength="40" />
         </div>
 
-        <div class="form-section" id="imagePickerSection" hidden>
-          <label class="form-label">이미지 (눌러서 본문에 추가)</label>
-          <div class="image-picker" id="imagePicker"></div>
-        </div>
-
         <div class="form-section">
           <label class="form-label" for="memoEditor">본문</label>
           <div class="memo-editor empty" id="memoEditor" contenteditable="true"
@@ -516,25 +479,11 @@
   (function () {
     'use strict';
 
-    // 작성자 ↔ 이미지 폴더 매핑
+    // 작성자 라벨
     const AUTHORS = {
-      mom: {
-        label: '엄마',
-        folder: '14',
-        files: ['11.png','12.png','13.png','14.png','15.png','16.png',
-                '21.png','22.png','23.png','24.png','25.png','26.png'],
-      },
-      dad: {
-        label: '아빠',
-        folder: '13',
-        files: ['11.png','12.png','13.png','14.png','15.png','16.png','17.png','18.png'],
-      },
-      dasom: {
-        label: '다솜',
-        folder: '12',
-        files: ['b1.png','b2.png','b3.png','b4.png','b5.png','b6.png','b7.png',
-                'b8.png','b9.png','b10.png','b11.png','b12.png','b13.png'],
-      },
+      mom:   { label: '엄마' },
+      dad:   { label: '아빠' },
+      dasom: { label: '다솜' },
     };
 
     const memosRef = collection(db, COLS.memos);
@@ -549,8 +498,6 @@
     const titleInput = document.getElementById('memoTitleInput');
     const editor = document.getElementById('memoEditor');
     const authorRow = form.querySelector('.author-row');
-    const pickerSection = document.getElementById('imagePickerSection');
-    const picker = document.getElementById('imagePicker');
     const btnSave = document.getElementById('btnSave');
     const btnReset = document.getElementById('btnReset');
     const btnCloseWrite = document.getElementById('btnCloseWrite');
@@ -637,33 +584,12 @@
         // 토글: 같은 버튼 다시 누르면 해제
         selectedAuthor = null;
         btn.classList.remove('selected');
-        pickerSection.hidden = true;
         return;
       }
       selectedAuthor = a;
       authorRow.querySelectorAll('.author-btn').forEach(b => b.classList.remove('selected'));
       btn.classList.add('selected');
-      renderPicker(a);
     });
-
-    function renderPicker(authorKey) {
-      const meta = AUTHORS[authorKey];
-      picker.innerHTML = '';
-      meta.files.forEach(f => {
-        const b = document.createElement('button');
-        b.type = 'button';
-        b.title = `${meta.folder}/${f}`;
-        const img = document.createElement('img');
-        img.src = `${meta.folder}/${f}`;
-        img.alt = '';
-        b.appendChild(img);
-        // mousedown 으로 default 막아 contenteditable 포커스 보존
-        b.addEventListener('mousedown', (ev) => ev.preventDefault());
-        b.addEventListener('click', () => insertImage(`${meta.folder}/${f}`));
-        picker.appendChild(b);
-      });
-      pickerSection.hidden = false;
-    }
 
     // ─── 본문 에디터 ───
     function updateEmpty() {
@@ -672,39 +598,6 @@
     }
     editor.addEventListener('input', updateEmpty);
     editor.addEventListener('focus', updateEmpty);
-
-    function insertImage(src) {
-      editor.focus();
-      const img = document.createElement('img');
-      img.src = src;
-      img.alt = '';
-      const sel = window.getSelection();
-      let inserted = false;
-      if (sel && sel.rangeCount) {
-        const range = sel.getRangeAt(0);
-        if (editor.contains(range.commonAncestorContainer)) {
-          range.deleteContents();
-          range.insertNode(img);
-          // 커서를 이미지 뒤로 이동
-          range.setStartAfter(img);
-          range.setEndAfter(img);
-          sel.removeAllRanges();
-          sel.addRange(range);
-          inserted = true;
-        }
-      }
-      if (!inserted) {
-        editor.appendChild(img);
-        // 커서 끝으로
-        const range = document.createRange();
-        range.selectNodeContents(editor);
-        range.collapse(false);
-        const sel2 = window.getSelection();
-        sel2.removeAllRanges();
-        sel2.addRange(range);
-      }
-      updateEmpty();
-    }
 
     // ─── 저장 / 초기화 ───
     function resetForm() {
