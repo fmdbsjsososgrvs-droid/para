@@ -171,14 +171,24 @@
     }
     .pw-btn:active { transform: translateY(0); }
 
-    .discord-btn {
-      display: inline-block;
-      text-decoration: none;
-      background: linear-gradient(135deg, #5865F2 0%, #7289DA 100%);
-      box-shadow: 0 6px 18px rgba(88, 101, 242, 0.45);
+    .passkey-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+      border: none;
+      background: linear-gradient(135deg, #6a8caf 0%, #4a6b8a 100%);
+      box-shadow: 0 6px 18px rgba(74, 107, 138, 0.4);
+      font-family: 'Gaegu', 'Apple SD Gothic Neo', '돋움', sans-serif;
     }
-    .discord-btn:hover {
-      box-shadow: 0 9px 22px rgba(88, 101, 242, 0.55);
+    .passkey-btn:hover {
+      box-shadow: 0 9px 22px rgba(74, 107, 138, 0.5);
+    }
+    .passkey-btn:disabled {
+      opacity: 0.6;
+      cursor: default;
+      transform: none;
     }
 
     .err {
@@ -227,26 +237,67 @@
       <img src="11/11.png" alt="" />
     </div>
 
-    <a href="/api/auth/login" class="pw-btn discord-btn">Discord로 로그인</a>
+    <button type="button" class="pw-btn passkey-btn" id="btnLogin">🔐 Face ID / 지문 / YubiKey로 로그인</button>
     <div class="err" id="err">&nbsp;</div>
 
     <p class="footer-note">사랑하는 가족만 들어올 수 있어요 ♥</p>
   </main>
 
+  <script src="js/simplewebauthn-browser.js"></script>
   <script>
-    // Discord 로그인 실패 시 콜백에서 붙여주는 ?error= 코드를 사람이 읽을 메시지로 보여줍니다.
     (function () {
-      const messages = {
-        invalid_state: '로그인 요청이 만료됐어요. 다시 시도해주세요.',
-        token_exchange_failed: 'Discord 인증에 실패했어요. 잠시 후 다시 시도해주세요.',
-        user_fetch_failed: 'Discord 사용자 정보를 가져오지 못했어요.',
-        not_allowed: '허용되지 않은 계정이에요 🥲',
-      };
-      const code = new URLSearchParams(location.search).get('error');
-      if (code) {
-        const err = document.getElementById('err');
-        err.textContent = messages[code] || '로그인에 실패했어요.';
+      const btn = document.getElementById('btnLogin');
+      const err = document.getElementById('err');
+
+      function showError(msg) {
+        err.textContent = msg;
+        err.style.animation = 'none';
+        void err.offsetWidth;
+        err.style.animation = '';
       }
+
+      if (!window.PublicKeyCredential || !window.SimpleWebAuthnBrowser) {
+        btn.disabled = true;
+        showError('이 브라우저는 패스키 로그인을 지원하지 않아요.');
+        return;
+      }
+
+      btn.addEventListener('click', async () => {
+        btn.disabled = true;
+        showError(' ');
+        try {
+          const optRes = await fetch('/api/webauthn/login-options');
+          const options = await optRes.json();
+          if (!optRes.ok) {
+            showError(options.error || '로그인 준비에 실패했어요.');
+            return;
+          }
+
+          const authResponse = await SimpleWebAuthnBrowser.startAuthentication({ optionsJSON: options });
+
+          const verifyRes = await fetch('/api/webauthn/login-verify', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ response: authResponse }),
+          });
+          const verifyJson = await verifyRes.json();
+          if (!verifyRes.ok || !verifyJson.ok) {
+            showError(verifyJson.error || '로그인에 실패했어요.');
+            return;
+          }
+
+          location.href = 'home.html';
+        } catch (e) {
+          if (e && e.name === 'NotAllowedError') {
+            showError(' ');
+          } else {
+            console.error(e);
+            showError('로그인에 실패했어요: ' + (e && e.message ? e.message : e));
+          }
+        } finally {
+          btn.disabled = false;
+        }
+      });
     })();
   </script>
 </body>

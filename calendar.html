@@ -483,7 +483,7 @@
   } from './js/firebase-init.js';
 
   // Firestore 호출 전 익명 인증 보장 (보안 규칙: request.auth != null)
-  // 로그인 자체(Discord)는 서버가 이미 확인했으니, 여기서 실패해도
+  // 로그인 자체는 서버가 이미 확인했으니, 여기서 실패해도
   // 억지로 로그아웃시키지 않고 콘솔에만 남깁니다. (데이터 동기화만 잠시 늦어질 수 있음)
   try {
     await ensureSignedIn();

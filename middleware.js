@@ -1,8 +1,12 @@
 /* 다솜이네 가족 — 접근 제어 Edge Middleware
  *
  * home.html / calendar.html / todo.html / memo.html 은
- * 유효한 세션 쿠키(Discord 로그인 + 허용된 사용자 ID 확인 완료)가 있어야만 통과합니다.
+ * 유효한 세션 쿠키(패스키 로그인 완료)가 있어야만 통과합니다.
  * 없으면 로그인 화면(index.html)으로 돌려보냅니다.
+ *
+ * "허용된 사용자" 목록은 따로 없습니다 — WEBAUTHN_CREDENTIALS에 등록된
+ * 기기(Face ID/Touch ID/YubiKey)로 서명을 통과해야만 애초에 세션 쿠키가
+ * 발급되므로, 유효한 쿠키 자체가 곧 허가입니다.
  *
  * 반대로 "/" 나 index.html에 이미 유효한 세션으로 들어오면
  * (예: 로그인해두고 다른 사이트 갔다가 다시 들어온 경우) 로그인 화면을 또 보여주지 않고
@@ -17,11 +21,10 @@ export const config = {
 
 export default async function middleware(request) {
   const sessionSecret = process.env.SESSION_SECRET;
-  const allowedUserId = process.env.DISCORD_ALLOWED_USER_ID;
   const token = readCookie(request.headers.get('cookie'), 'dasom_session');
 
   const payload = sessionSecret && token ? await verifySessionToken(token, sessionSecret) : null;
-  const authed = Boolean(payload && allowedUserId && payload.id === allowedUserId);
+  const authed = Boolean(payload && payload.cred);
 
   const url = new URL(request.url);
   const isGate = url.pathname === '/' || url.pathname === '/index.html';
